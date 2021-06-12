@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/login_reg.css' %}">
+</head>
+<body>
+    <div id="wrapper">
+        <div id="errors">
+            {% if messages %}
+            <h1 class="messages">ERRORS</h1>
+                <ul class="messages">    
+                {% for message in messages %}    
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <h1 id="title">SwoleMates</h1>
+        <div id="login_reg">
+
+            <div id="registration">
+
+                <h1>Register</h1>
+
+                <form action="/register" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form_field">
+                        <label for="first_name">First Name</label>
+                        <input type="text" name="first_name">
+                    </div>
+                
+                    <div class="form_field">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" name="last_name">
+                    </div>
+
+                    <div class="form_field">
+                        <label for="username">Username</label>
+                        <input type="text" name="username">
+                    </div>
+
+                    <div class="form_field">
+                        <label for="email">Email</label>
+                        <input type="text" name="email">
+                    </div>
+
+                    <div class="form_field">
+                        <label for="Password">Password</label>
+                        <input type="password" name="password">
+                    </div>
+
+                    <div class="form_field">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" name="confirm_password">
+                    </div>
+
+                    <input type="submit" value="Register" class="button">
+        
+                </form>
+            </div>
+
+            <div id="login">
+                <h1>Login</h1>
+                <form action="/login" method="POST">
+                    {% csrf_token %}
+
+                    <div class="form_field">
+                        <label for="email">Email</label>
+                        <input type="text" name="email">
+                    </div>
+
+                    <div class="form_field">
+                        <label for="password">Password</label>
+                        <input type="password" name="password">
+                    </div>
+                    
+                    <input type="submit" value="Login" class="button">
+
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SM | {{user.username}}</title>
+    {% load static %}
+</head>
+<body>
+    <div id="profile_left">
+        <!-- {% if '/media/{{user.profile_photo}}' %}
+            <img src='/media/images/{{user.profile_photo}}' alt = "ur screwed">
+        {% else %}
+            <img src="{% static 'images/default.png' %}" alt="ur still screwed">
+        {% endif %} -->
+        <img src='/media/images/{{user.profile_photo}}' alt = "ur screwed">
+        <h1>{{user.username}}</h1>
+        <h3>{{user.first_name}} {{user.last_name}}</h3>
+    </div>
+
+    <div id="profile_main">
+        <div id="make_post">
+            <form action="{{user.username}}/profile_post_create" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" value="Post something" name="content">
+                <input type="submit" value="POST">
+            </form>
+        </div>
+
+        <div id="post_wrapper">
+            {% for post in posts %}
+                <div class="post">
+                    <h3>{{ post.posted_by }}</h3>
+                    <p>{{ post.created_at }}</p>
+                    <p>{{post.content}}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="profile_right">
+        <div id="profile_friends_list">
+            {% if friends %}
+
+                <h2>Friends</h2>
+                {% for friend in friends %}
+                    <div class="friend_tile">
+                        <img src="static/images/default_icon.png" alt="profile pic">
+                        <div class="tile_text">
+                            <h3><a href="">{{ friend.username }}</a></h3>
+                            <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            {% else %}
+
+                <h2>Add Friends</h2>
+                    {% for person in all_others %}
+                    <div class="friend_tile">
+                        <img src="" alt="">
+                        <div class="tile_text">
+                            <h3><a href="">{{ person.username }}</a></h3>
+                            <p>{{ person.first_name }} {{ person.last_name }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+            {% endif %}
+        </div>
+
+        <div id="profile_workouts">
+            {% if user_workouts %}
+                <h2>Your Workouts</h2>
+                {% for workout in user_workouts %}
+                    <div class="workout_tile">
+                        <img src="static/images/default_icon.png" alt="profile pic">
+                        <div class="tile_text">
+                            <h3><a href="">{{ workout.created_by.username }}</a></h3>
+                            <p>{{ workout.created_by.first_name }} {{ workout.created_by.last_name }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <h3><a href="">Create a Workout</a></h3>
+        </div>
+    </div>
+</body>
+</html>

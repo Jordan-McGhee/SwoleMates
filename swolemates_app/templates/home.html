@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwoleMates</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="nav">
+            <div id="nav_left">
+                <h1>LOGO</h1>
+                <h1>SwoleMates</h1>
+            </div>
+            <div id="nav_right">
+                <h3>Friends</h3>
+                <h3>Workouts</h3>
+                <h3> <a href="/swolemates/{{user.username}}">{{ user.username }}</a></h3>
+                <form action="logout" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="LOGOUT" class="button" id="logout">
+                </form>
+            </div>
+        </div>
+
+        <div id="main_content">
+
+            <div id="make_post">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="text" value="Post something">
+                    <input type="submit" value="POST">
+                </form>
+            </div>
+
+            <div id="post_wrapper">
+                {% for post in posts %}
+                    {% if post.posted_by in user.friends or post.posted_by == user %}
+                    <div class="post">
+                        <h3>{{ post.posted_by }}</h3>
+                        <p>{{ post.created_at }}</p>
+                        <p>{{post.content}}</p>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div id="main_right">
+
+                <div id="main_friends_list">
+                    {% if friends %}
+
+                        <h2>Friends</h2>
+                        {% for friend in friends %}
+                            <div class="friend_tile">
+                                <img src="static/images/default_icon.png" alt="profile pic">
+                                <div class="tile_text">
+                                    <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
+                                    <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    {% else %}
+
+                        <h2>Add Friends</h2>
+                            {% for person in all_others %}
+                            <div class="friend_tile">
+                                <img src="" alt="">
+                                <div class="tile_text">
+                                    <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                                    <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                    {% endif %}
+                </div>
+
+                <div id="main_workouts">
+                    {% if user_workouts %}
+                        <h2>Your Workouts</h2>
+                        {% for workout in user_workouts %}
+                            <div class="workout_tile">
+                                <img src="static/images/default_icon.png" alt="profile pic">
+                                <div class="tile_text">
+                                    <h3><a href="">{{ workout.created_by.username }}</a></h3>
+                                    <p>{{ workout.created_by.first_name }} {{ workout.created_by.last_name }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <h3><a href="">Create a Workout</a></h3>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
