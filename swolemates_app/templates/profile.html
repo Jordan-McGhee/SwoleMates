@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SM | {{user.username}}</title>
+    <title>SM | {{profile.username}}</title>
     {% load static %}
 </head>
 <body>
+    <!-- HOME - DELETE LATER--> <a href="/swolemates">HOME</a>
+
     <div id="profile_left">
         <!-- {% if '/media/{{user.profile_photo}}' %}
             <img src='/media/images/{{user.profile_photo}}' alt = "ur screwed">
@@ -15,25 +17,38 @@
             <img src="{% static 'images/default.png' %}" alt="ur still screwed">
         {% endif %} -->
         <img src='/media/images/{{user.profile_photo}}' alt = "ur screwed">
-        <h1>{{user.username}}</h1>
-        <h3>{{user.first_name}} {{user.last_name}}</h3>
+        <h1>{{profile.username}}</h1>
+        <h3>{{profile.first_name}} {{profile.last_name}}</h3>
+        {% if profile.bio %}
+            <p>{{profile.bio}}</p>
+        {% else %}
+            <p>NO BIO</p>
+        {% endif %}
+
+        {% if profile.fav_exercises %}
+            <p>{{profile.fav_exercises}}</p>
+        {% else %}
+            <p>NO FAV EXERCISES</p>
+        {% endif %}
     </div>
 
     <div id="profile_main">
-        <div id="make_post">
-            <form action="{{user.username}}/profile_post_create" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="text" value="Post something" name="content">
-                <input type="submit" value="POST">
-            </form>
-        </div>
+        {% if user == profile %}
+            <div id="make_post">
+                <form action="{{user.username}}/profile_post_create" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="text" value="Post something" name="content">
+                    <input type="submit" value="POST">
+                </form>
+            </div>
+        {% endif %}
 
         <div id="post_wrapper">
-            {% for post in posts %}
+            {% for post in posts reversed %}
                 <div class="post">
                     <h3>{{ post.posted_by }}</h3>
                     <p>{{ post.created_at }}</p>
-                    <p>{{post.content}}</p>
+                    <p>{{ post.content }}</p>
                 </div>
             {% endfor %}
         </div>
@@ -41,49 +56,75 @@
 
     <div id="profile_right">
         <div id="profile_friends_list">
-            {% if friends %}
+            {% if profile_friends %}
 
                 <h2>Friends</h2>
-                {% for friend in friends %}
+                {% for friend in profile_friends %}
                     <div class="friend_tile">
                         <img src="static/images/default_icon.png" alt="profile pic">
                         <div class="tile_text">
-                            <h3><a href="">{{ friend.username }}</a></h3>
+                            <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
                             <p>{{ friend.first_name }} {{ friend.last_name }}</p>
                         </div>
                     </div>
                 {% endfor %}
 
             {% else %}
-
-                <h2>Add Friends</h2>
-                    {% for person in all_others %}
-                    <div class="friend_tile">
-                        <img src="" alt="">
-                        <div class="tile_text">
-                            <h3><a href="">{{ person.username }}</a></h3>
-                            <p>{{ person.first_name }} {{ person.last_name }}</p>
+                
+                {% if user == profile %}
+                    <h2>Add Friends</h2>
+                        {% for person in all_others %}
+                        <div class="friend_tile">
+                            <img src="" alt="">
+                            <div class="tile_text">
+                                <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                                <p>{{ person.first_name }} {{ person.last_name }}</p>
+                            </div>
                         </div>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                {% else %}
+                    <h2>{{profile.username}}'s Friends</h2>
+                    <p>This user has no friends yet. :/</p>
+                {% endif %}
 
             {% endif %}
         </div>
 
         <div id="profile_workouts">
-            {% if user_workouts %}
-                <h2>Your Workouts</h2>
-                {% for workout in user_workouts %}
-                    <div class="workout_tile">
-                        <img src="static/images/default_icon.png" alt="profile pic">
-                        <div class="tile_text">
-                            <h3><a href="">{{ workout.created_by.username }}</a></h3>
-                            <p>{{ workout.created_by.first_name }} {{ workout.created_by.last_name }}</p>
+            {% if user == profile %}
+                {% if profile_workouts %}
+                    <h2>Your Workouts</h2>
+                    {% for workout in profile_workouts %}
+                        <div class="workout_tile">
+                            <img src="static/images/default_icon.png" alt="profile pic">
+                            <div class="tile_text">
+                                <h3><a href="">{{ workout.created_by.username }}</a></h3>
+                                <p>{{ workout.created_by.first_name }} {{ workout.created_by.last_name }}</p>
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <p>You haven't created any workouts.</p>
+                {% endif %}
+                <h3><a href="">Create a Workout</a></h3>
+
+            {% else %}
+                {% if profile_workouts %}
+                    <h2>{{profile.username}}'s Workouts</h2>
+                    {% for workout in profile_workouts %}
+                        <div class="workout_tile">
+                            <img src="static/images/default_icon.png" alt="profile pic">
+                            <div class="tile_text">
+                                <h3><a href="">{{ workout.created_by.username }}</a></h3>
+                                <p>{{ workout.created_by.first_name }} {{ workout.created_by.last_name }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>{{profile.username}} hasn't created any workouts.</p>
+                {% endif %}
+
             {% endif %}
-            <h3><a href="">Create a Workout</a></h3>
         </div>
     </div>
 </body>

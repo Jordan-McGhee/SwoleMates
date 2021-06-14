@@ -63,15 +63,39 @@ def home(request):
 
     return render(request, "home.html", context)
 
+def home_post_create(request):
+    user = User.objects.get(id=request.session['user_id'])
+    if request.method == "POST":
+        errors = Post.objects.validator(request.POST)
+
+        if len(errors) > 0:
+            if len(errors) > 0:
+                for k, v in errors.items():
+                    messages.error(request, v)
+            return redirect('/swolemates')
+        
+        Post.objects.create(
+            content = request.POST['content'],
+            image = request.FILES.get('image'),
+            posted_by = User.objects.get(id = user.id)
+        )
+        
+    return redirect('/swolemates')
+
 # PROFILE PAGE
 
 def profile(request, username):
-    user = User.objects.get(username=username)
-    print(user.first_name)
+    user = User.objects.get(id=request.session['user_id'])
+    profile = User.objects.get(username=username)
+    print(profile.first_name)
 
     context = {
         "user": user,
-        "posts": user.posts.all()
+        "profile": profile,
+        "posts": profile.posts.all(),
+        "profile_friends": profile.friends.all(),
+        "all_others": User.objects.exclude(id=user.id),
+        "profile_workouts": profile.workouts.all()
     }
 
     return render(request, "profile.html", context)
@@ -84,7 +108,7 @@ def profile_post_create(request, username):
             if len(errors) > 0:
                 for k, v in errors.items():
                     messages.error(request, v)
-            return redirect(f'swolemates/{username}')
+            return redirect(f'/swolemates/{username}')
         
         Post.objects.create(
             content = request.POST['content'],

@@ -27,15 +27,15 @@
         <div id="main_content">
 
             <div id="make_post">
-                <form action="" method="POST" enctype="multipart/form-data">
+                <form action="swolemates/home_post_create" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input type="text" value="Post something">
+                    <input type="text" value="Post something" name="content">
                     <input type="submit" value="POST">
                 </form>
             </div>
 
             <div id="post_wrapper">
-                {% for post in posts %}
+                {% for post in posts reversed %}
                     {% if post.posted_by in user.friends or post.posted_by == user %}
                     <div class="post">
                         <h3>{{ post.posted_by }}</h3>

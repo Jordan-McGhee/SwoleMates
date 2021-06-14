@@ -84,6 +84,8 @@ class User(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length = 60)
     profile_photo = models.ImageField(default='default.png', upload_to = "images/")
+    bio = models.TextField(blank=True, null=True)
+    fav_exercises = models.TextField(blank=True, null=True)
     objects = UserManager()
 
     # friend_request = models.ManyToManyField("self") not symmetrical?
