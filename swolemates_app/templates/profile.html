@@ -57,30 +57,60 @@
     <div id="profile_right">
         <div id="profile_friends_list">
             {% if profile_friends %}
+                {% if user == profile %}
+                    <h2><a href="/swolemates/{{user.username}}/friends">Your Friends</a></h2>
 
-                <h2>Friends</h2>
-                {% for friend in profile_friends %}
-                    <div class="friend_tile">
-                        <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
-                        <div class="tile_text">
-                            <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
-                            <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                    {% for friend in profile_friends %}
+                        <div class="profile_friend_tile">
+                            <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
+                            <div class="tile_text">
+                                <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
+                                <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                    
+                    <h2>Add Friends</h2>
+                        {% for person in all_others %}
+                            {% if person not in profile_friends %}
+                                <div class="profile_friend_tile">
+                                    <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                                    <div class="tile_text">
+                                        <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                                        <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                {% else %}
+
+                    <h2><a href="/swolemates/{{profile.username}}/friends">{{profile.username}}'s Friends</a></h2>
+
+                    {% for friend in profile_friends %}
+                        <div class="profile_friend_tile">
+                            <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
+                            <div class="tile_text">
+                                <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
+                                <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                {% endif %}
 
             {% else %}
                 
                 {% if user == profile %}
                     <h2>Add Friends</h2>
                         {% for person in all_others %}
-                        <div class="friend_tile">
-                            <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
-                            <div class="tile_text">
-                                <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
-                                <p>{{ person.first_name }} {{ person.last_name }}</p>
-                            </div>
-                        </div>
+                                <div class="profile_friend_tile">
+                                    <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                                    <div class="tile_text">
+                                        <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                                        <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                    </div>
+                                </div>
                         {% endfor %}
                 {% else %}
                     <h2>{{profile.username}}'s Friends</h2>

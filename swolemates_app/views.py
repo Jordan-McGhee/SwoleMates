@@ -118,3 +118,20 @@ def profile_post_create(request, username):
         
     return redirect(f'/swolemates/{username}')
 
+
+
+
+# FRIENDS LIST
+
+def friends_list(request, username):
+    user = User.objects.get(id=request.session['user_id'])
+    profile = User.objects.get(username=username)
+    
+    context = {
+        "user": user,
+        "profile": profile,
+        "profile_friends": profile.friends.all(),
+        "all_others": User.objects.exclude(id=user.id)
+    }
+
+    return render(request, "friends_list.html", context)

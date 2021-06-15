@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwoleMates</title>
+</head>
+<body>
+    <div id="wrapper">
+        {% if user == profile %}
+            <h2>Your Friends</h2>
+            {% if profile_friends %}
+
+                {% for friend in profile_friends %}
+
+                    <div class="friends_list_tile_user">
+                        <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
+                        <div class="tile_text">
+                            <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
+                            <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+                <h2>Add Friends</h2>
+                <div id="friends_add_friends">
+                    {% for person in all_others %}
+                        {% if person not in profile_friends %}
+                            <div class="friends_list_tile_right">
+                                <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                                <div class="tile_text">
+                                    <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                                    <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+            {% else %}
+
+                <h2>You don't have friends yet — Add some!</h2>
+                {% for person in all_others %}
+                    <div class="friend_tile">
+                        <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                        <div class="tile_text">
+                            <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                            <p>{{ person.first_name }} {{ person.last_name }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            {% endif %}
+        
+        {% else %}
+            <h2>{{profile.username}}'s Friends</h2>
+            {% if profile_friends %}
+
+                {% for friend in profile_friends %}
+
+                    <div class="friends_list_tile">
+                        <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
+                        <div class="tile_text">
+                            <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
+                            <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>This user has no friends yet. :/</p>
+
+            {% endif %}
+            
+        {% endif %}
+    </div>
+</body>
+</html>
