@@ -16,7 +16,7 @@
         {% else %}
             <img src="{% static 'images/default.png' %}" alt="ur still screwed">
         {% endif %} -->
-        <img src='/media/images/{{user.profile_photo}}' alt = "ur screwed">
+        <img src='/media/images/{{profile.profile_photo}}' alt = "ur screwed">
         <h1>{{profile.username}}</h1>
         <h3>{{profile.first_name}} {{profile.last_name}}</h3>
         {% if profile.bio %}
@@ -61,7 +61,7 @@
                 <h2>Friends</h2>
                 {% for friend in profile_friends %}
                     <div class="friend_tile">
-                        <img src="static/images/default_icon.png" alt="profile pic">
+                        <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
                         <div class="tile_text">
                             <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
                             <p>{{ friend.first_name }} {{ friend.last_name }}</p>
@@ -75,7 +75,7 @@
                     <h2>Add Friends</h2>
                         {% for person in all_others %}
                         <div class="friend_tile">
-                            <img src="" alt="">
+                            <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                             <div class="tile_text">
                                 <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
                                 <p>{{ person.first_name }} {{ person.last_name }}</p>
@@ -113,7 +113,7 @@
                     <h2>{{profile.username}}'s Workouts</h2>
                     {% for workout in profile_workouts %}
                         <div class="workout_tile">
-                            <img src="static/images/default_icon.png" alt="profile pic">
+                            <img src="/media/images/{{profile.profile_photo}}" alt="profile pic">
                             <div class="tile_text">
                                 <h3><a href="">{{ workout.created_by.username }}</a></h3>
                                 <p>{{ workout.created_by.first_name }} {{ workout.created_by.last_name }}</p>
