@@ -76,6 +76,15 @@ class PostCommentManager(models.Manager):
 
         return errors
 
+class WorkoutManager(models.Manager):
+    def validator(self, postData):
+        errors = {}
+
+        if len(postData['name']) < 1:
+            errors["name"] = "Workout name can't be empty"
+
+        return errors
+
 #  MODELS
 class User(models.Model):
     first_name = models.CharField(max_length = 50)
@@ -140,6 +149,7 @@ class Workout(models.Model):
     name = models.CharField(max_length=50)
     created_by = models.ForeignKey(User, related_name="workouts", on_delete=models.CASCADE)
     liked_by = models.ManyToManyField(User, related_name="liked_workouts", blank=True)
+    objects = WorkoutManager()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

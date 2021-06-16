@@ -10,5 +10,10 @@ urlpatterns = [
     path('swolemates/home_post_create', views.home_post_create),
     path('swolemates/<str:username>', views.profile),
     path('swolemates/<str:username>/profile_post_create', views.profile_post_create),
-    path('swolemates/<str:username>/friends', views.friends_list)
+    path('swolemates/<str:username>/friends', views.friends_list),
+    path('swolemates/workout', views.workout_form),
+    path('swolemates/workout/create', views.workout_create),
+    path('swolemates/workout/<int:id>', views.workout_view),
+    path('swolemates/workout/<int:id>/edit', views.workout_edit),
+    path('swolemates/workout<int:id>/delete', views.workout_delete)
 ]
