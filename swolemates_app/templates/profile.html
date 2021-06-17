@@ -35,7 +35,7 @@
     <div id="profile_main">
         {% if user == profile %}
             <div id="make_post">
-                <form action="{{user.username}}/profile_post_create" method="POST" enctype="multipart/form-data">
+                <form action="user/{{user.username}}/profile_post_create" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="text" value="Post something" name="content">
                     <input type="submit" value="POST">
@@ -58,13 +58,13 @@
         <div id="profile_friends_list">
             {% if profile_friends %}
                 {% if user == profile %}
-                    <h2><a href="/swolemates/{{user.username}}/friends">Your Friends</a></h2>
+                    <h2><a href="/swolemates/user/{{user.username}}/friends">Your Friends</a></h2>
 
                     {% for friend in profile_friends %}
                         <div class="profile_friend_tile">
                             <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
                             <div class="tile_text">
-                                <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
+                                <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                                 <p>{{ friend.first_name }} {{ friend.last_name }}</p>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                                 <div class="profile_friend_tile">
                                     <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                                     <div class="tile_text">
-                                        <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                                        <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                         <p>{{ person.first_name }} {{ person.last_name }}</p>
                                     </div>
                                 </div>
@@ -85,13 +85,13 @@
 
                 {% else %}
 
-                    <h2><a href="/swolemates/{{profile.username}}/friends">{{profile.username}}'s Friends</a></h2>
+                    <h2><a href="/swolemates/user/{{profile.username}}/friends">{{profile.username}}'s Friends</a></h2>
 
                     {% for friend in profile_friends %}
                         <div class="profile_friend_tile">
                             <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
                             <div class="tile_text">
-                                <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
+                                <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                                 <p>{{ friend.first_name }} {{ friend.last_name }}</p>
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                                 <div class="profile_friend_tile">
                                     <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                                     <div class="tile_text">
-                                        <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                                        <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                         <p>{{ person.first_name }} {{ person.last_name }}</p>
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@
                     <h2>Your Workouts</h2>
                     {% for workout in profile_workouts %}
                         <div class="workout_tile">
-                            <img src="static/images/default_icon.png" alt="profile pic">
+                            <img src="/media/images/{{profile.profile_photo}}" alt="profile pic">
                             <div class="tile_text">
                                 <h3><a href="">{{ workout.created_by.username }}</a></h3>
                                 <p>{{ workout.created_by.first_name }} {{ workout.created_by.last_name }}</p>
@@ -136,7 +136,7 @@
                 {% else %}
                     <p>You haven't created any workouts.</p>
                 {% endif %}
-                <h3><a href="">Create a Workout</a></h3>
+                <h3><a href="/swolemates/workout">Create a Workout</a></h3>
 
             {% else %}
                 {% if profile_workouts %}
@@ -145,13 +145,13 @@
                         <div class="workout_tile">
                             <img src="/media/images/{{profile.profile_photo}}" alt="profile pic">
                             <div class="tile_text">
-                                <h3><a href="">{{ workout.created_by.username }}</a></h3>
-                                <p>{{ workout.created_by.first_name }} {{ workout.created_by.last_name }}</p>
+                                <h3><a href="/swolemates/workout/{{workout.id}}">{{ workout.name }}</a></h3>
+                                <p>Created By: {{profile.username}} on {{workout.created_at}}</p>
                             </div>
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p>{{profile.username}} hasn't created any workouts.</p>
+                    <p>{{profile.username}} hasn't created any workouts yet.</p>
                 {% endif %}
 
             {% endif %}

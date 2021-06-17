@@ -7,6 +7,7 @@
     <title>SwoleMates</title>
 </head>
 <body>
+    <!-- HOME - DELETE LATER--> <a href="/swolemates">HOME</a>
     <div id="wrapper">
         {% if user == profile %}
             <h2>Your Friends</h2>
@@ -17,7 +18,7 @@
                     <div class="friends_list_tile_user">
                         <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
                         <div class="tile_text">
-                            <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
+                            <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                             <p>{{ friend.first_name }} {{ friend.last_name }}</p>
                         </div>
                     </div>
@@ -31,7 +32,7 @@
                             <div class="friends_list_tile_right">
                                 <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                                 <div class="tile_text">
-                                    <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                                    <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                     <p>{{ person.first_name }} {{ person.last_name }}</p>
                                 </div>
                             </div>
@@ -46,7 +47,7 @@
                     <div class="friend_tile">
                         <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                         <div class="tile_text">
-                            <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                            <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                             <p>{{ person.first_name }} {{ person.last_name }}</p>
                         </div>
                     </div>
@@ -63,7 +64,7 @@
                     <div class="friends_list_tile">
                         <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
                         <div class="tile_text">
-                            <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
+                            <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                             <p>{{ friend.first_name }} {{ friend.last_name }}</p>
                         </div>
                     </div>
@@ -75,7 +76,7 @@
                 <p>This user has no friends yet. :/</p>
 
             {% endif %}
-            
+
         {% endif %}
     </div>
 </body>

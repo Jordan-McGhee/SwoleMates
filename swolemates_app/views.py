@@ -115,9 +115,7 @@ def profile_post_create(request, username):
             posted_by = User.objects.get(username=username)
         )
         
-    return redirect(f'/swolemates/{username}')
-
-
+    return redirect(f'/swolemates/user/{username}')
 
 
 # FRIENDS LIST
@@ -135,6 +133,19 @@ def friends_list(request, username):
 
     return render(request, "friends_list.html", context)
 
+# WORKOUT LIST
+
+def workouts_list(request, username):
+    user = User.objects.get(id=request.session['user_id'])
+    profile = User.objects.get(username=username)
+
+    context = {
+        "user": user,
+        "profile": profile,
+        "workouts": profile.workouts.all()
+    }
+
+    return render(request, "workouts_list.html", context)
 
 # WORKOUT PAGES
 
@@ -144,17 +155,18 @@ def workout_form(request):
 def workout_create(request):
     if request.method == "POST":
         user = User.objects.get(id=request.session['user_id'])
-        errors = Workout.objects.validator()
+        errors = Workout.objects.validator(request.POST)
         
         if len(errors) > 0:
             for k, v in errors.items():
                 messages.error(request, v)
             return redirect(f'/swolemates/workout')
 
-        workout = Workout.objects.create(name=request.POST['name'], created_by=user)
+        workout = Workout.objects.create(name=request.POST['workout_name'], created_by=user)
 
         for i in range(1,9):
-            if request.POST[f'name{i}']:
+            if request.POST[f'name{i}'] != "":
+                print(request.POST[f'name{i}'])
                 Exercise.objects.create(workout=workout, name=request.POST[f'name{i}'],set_count=request.POST[f'sets{i}'], rep_count=request.POST[f'reps{i}'])
 
         return redirect(f'/swolemates/workout/{workout.id}')
@@ -162,22 +174,51 @@ def workout_create(request):
     return redirect('/swolemates/workout')
 
 def workout_view(request, id):
+    workout = Workout.objects.get(id=id)
 
     context = {
-        "workout": Workout.objects.get(id=id),
-        "user": User.objects.get(id=request.session['user_id'])
+        "workout": workout,
+        "user": User.objects.get(id=request.session['user_id']),
+        "exercises": workout.exercises.all()
     }
 
     return render(request, "workout_view.html", context)
 
 def workout_edit(request, id):
+    workout = Workout.objects.get(id=id)
+
     context = {
-        "workout": Workout.objects.get(id=id),
-        "user": User.objects.get(id=request.session['user_id'])
+        "workout": workout,
+        "user": User.objects.get(id=request.session['user_id']),
+        "exercises": workout.exercises.all()
     }
 
     return render(request, "workout_edit.html", context)
 
+def workout_update(request, id):
+    workout = Workout.objects.get(id=id)
+
+    # ADD THIS
+    workout.name = request.POST['workout_name']
+
+    for exercise in workout.exercises:
+        counter = 1
+        exercise.name = request.POST[f'name{counter}']
+        exercise.set_count = request.POST[f'sets{counter}']
+        exercise.rep_count = request.POST[f'reps{counter}']
+        exercise.save()
+        counter += 1
+
+    workout.save()
+
+    return redirect(f"/swolemates/workout/{id}")
+
 def workout_delete(request, id):
-    pass
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+
+        workout = Workout.objects.get(id=id)
+        workout.delete()
+
+        return redirect(f"swolemates/user/{user.username}/workouts")
 

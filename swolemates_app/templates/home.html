@@ -14,9 +14,9 @@
                 <h1>SwoleMates</h1>
             </div>
             <div id="nav_right">
-                <h3><a href="/swolemates/{{user.username}}/friends">Friends</a></h3>
-                <h3>Workouts</h3>
-                <h3> <a href="/swolemates/{{user.username}}">{{ user.username }}</a></h3>
+                <h3><a href="/swolemates/user/{{user.username}}/friends">Friends</a></h3>
+                <h3><a href="/swolemates/user/{{user.username}}/workouts">Workouts</a></h3>
+                <h3> <a href="/swolemates/user/{{user.username}}">{{ user.username }}</a></h3>
                 <form action="logout" method="POST">
                     {% csrf_token %}
                     <input type="submit" value="LOGOUT" class="button" id="logout">
@@ -56,7 +56,7 @@
                                 <div class="profile_friend_tile">
                                     <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}}'s profile pic">
                                     <div class="tile_text">
-                                        <h3><a href="/swolemates/{{friend.username}}">{{ friend.username }}</a></h3>
+                                        <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                                         <p>{{ friend.first_name }} {{ friend.last_name }}</p>
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@
                                     <div class="profile_friend_tile">
                                         <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                                         <div class="tile_text">
-                                            <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                                            <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                             <p>{{ person.first_name }} {{ person.last_name }}</p>
                                         </div>
                                     </div>
@@ -80,7 +80,7 @@
                             <div class="friend_tile">
                                 <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}}'s profile pic">
                                 <div class="tile_text">
-                                    <h3><a href="/swolemates/{{person.username}}">{{ person.username }}</a></h3>
+                                    <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                     <p>{{ person.first_name }} {{ person.last_name }}</p>
                                 </div>
                             </div>

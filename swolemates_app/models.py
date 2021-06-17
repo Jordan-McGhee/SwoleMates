@@ -80,8 +80,8 @@ class WorkoutManager(models.Manager):
     def validator(self, postData):
         errors = {}
 
-        if len(postData['name']) < 1:
-            errors["name"] = "Workout name can't be empty"
+        if len(postData['workout_name']) < 1:
+            errors["workout_name"] = "Workout name can't be empty"
 
         return errors
 
@@ -164,3 +164,6 @@ class Exercise(models.Model):
     rep_count = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"workout/{self.workout.name}/exercise/{self.id}"

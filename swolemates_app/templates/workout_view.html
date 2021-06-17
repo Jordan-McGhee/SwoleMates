@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout {{workout.name}}</title>
+</head>
+<body>
+    <!-- HOME - DELETE LATER--> <a href="/swolemates">HOME</a>
+    <h1>{{workout.name}}</h1>
+    <p>{{workout.created_by}}</p>
+
+    {% for exercise in exercises %}
+
+        <h3>Exercise {{forloop.counter}}: {{exercise.name}}</h3>
+        <p>Sets: {{exercise.set_count}} | Reps: {{exercise.set_count}}</p>
+
+    {% endfor %}
+
+    {% if user == workout.created_by %}
+    <a href="">Edit Workout</a>
+    <form action="workout/{{workout.id}}/delete" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Delete Workout">
+    </form>
+    {% endif %}
+</body>
+</html>

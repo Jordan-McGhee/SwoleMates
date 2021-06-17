@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwoleMates</title>
+</head>
+<body>
+    <!-- HOME - DELETE LATER--> <a href="/swolemates">HOME</a>
+    <div id="wrapper">
+        {% if user == profile %}
+            <h2>Your Workouts</h2>
+            {% if workouts %}
+
+                {% for workout in workouts %}
+
+                    <div class="workouts_list_tile">
+                        <!-- CHANGE IMAGE | FIND FLEX or WEIGHT PNG -->
+                        <img src="/media/images/{{profile.profile_photo}}" alt="{{profile.username}} profile pic">
+                        <div class="tile_text">
+                            <h3><a href="/swolemates/workout/{{workout.id}}">{{ workout.name }}</a></h3>
+                            <p>Created By: You on {{workout.created_at}}</p>
+                            <a href="/swolemates/workout/{{workout.id}}/edit">Edit Workout</a>
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+                <h2>Create Workout</h2>
+                <a href="/swolemates/workout">Create Workout</a>
+
+            {% else %}
+
+                <h2>You haven't made any workouts yet — Create one!</h2>
+                <a href="/swolemates/workout">Create Workout</a>
+
+            {% endif %}
+        
+        {% else %}
+            <h2>{{profile.username}}'s Workouts</h2>
+            {% if workouts %}
+
+                {% for workout in workouts %}
+
+                    <div class="workouts_list_tile">
+                        <!-- CHANGE IMAGE | FIND FLEX or WEIGHT PNG -->
+                        <img src="/media/images/{{profile.profile_photo}}" alt="{{profile.username}} profile pic">
+                        <div class="tile_text">
+                            <h3><a href="/swolemates/workout/{{workout.id}}">{{ workout.name }}</a></h3>
+                            <p>Created By: {{profile.username}} on {{workout.created_at}}</p>
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>This user hasn't created any workouts yet.</p>
+
+            {% endif %}
+
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -11,9 +11,9 @@
     <form action="workout/create" method="POST">
         {% csrf_token %}
         
-        <div id="workout_title">
+        <div id="workout_name">
             <label for="name">Name</label>
-            <input type="text" name="name">
+            <input type="text" name="workout_name">
         </div>
 
         <div class="exercise_field">
@@ -150,8 +150,8 @@
 
         <div class="exercise_field">
             <div class="exercise_name">
-                <label for="name1">Exercise 4</label>
-                <input type="text" name="name1">
+                <label for="name4">Exercise 4</label>
+                <input type="text" name="name4">
             </div>
             <div class="sets_reps">
                 <div class="sets">
