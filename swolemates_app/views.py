@@ -51,7 +51,18 @@ def home(request):
     all_posts = Post.objects.all()
     friends = user.friends.all()
     all_other_users = User.objects.exclude(id=user.id)
+    
+    # empty list for user and friend objects to go into. This will be used to gather posts to show on the home page. I'm sure there's a much better way to do this, but my brain is fried and I have so much more to do. Please don't judge.
 
+    user_and_friends = []
+
+    # iterates over friends in a roundabout way. Can't iterate over a query object (learned that the hard way), so I iterate over the length of the friends query. Append user objects to my empty list. After the loop, I append the user as well. This will be used to check if a post.posted_by is equal to an object in this group 
+
+    for i in range(len(friends)):
+        user_and_friends.append(User.objects.get(username=friends[i].username))
+
+    user_and_friends.append(User.objects.get(username=user.username))
+    
     # grabs all friend request objects involving user
 
     # USER SENT
@@ -84,6 +95,7 @@ def home(request):
         "user": user,
         "posts": all_posts,
         "friends": friends,
+        "user_and_friends": user_and_friends,
         "all_others": all_other_users,
         "user_workouts": user.workouts.all(),
         "user_friend_requests": user_received_request_objects,
@@ -152,6 +164,7 @@ def home_remove_friend(request,username):
         user.friends.remove(removed_friend)
 
     return redirect(f'/swolemates')
+
 # PROFILE PAGE
 
 def profile(request, username):
@@ -456,4 +469,4 @@ def workout_delete(request, id):
         workout = Workout.objects.get(id=id)
         workout.delete()
 
-        return redirect(f"swolemates/user/{user.username}/workouts")
+        return redirect(f"/swolemates/user/{user.username}/workouts")

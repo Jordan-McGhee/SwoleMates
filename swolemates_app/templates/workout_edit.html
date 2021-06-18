@@ -64,3 +64,8 @@
 
 
         {% endfor %}
+
+        <form action="{{workout.id}}/delete" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Delete Workout">
+        </form>

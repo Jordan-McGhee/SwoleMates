@@ -37,8 +37,8 @@
 
             <div id="post_wrapper">
                 {% for post in posts reversed %}
-                    {% for friend in friends %}
-                        {% if post.posted_by == friend or post.posted_by == user %}
+                    {% for person in user_and_friends %}
+                        {% if post.posted_by == person %}
                         <div class="post">
                             <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
                             <h3><a href="/swolemates/user/{{post.posted_by}}">{{ post.posted_by }}</a></h3>
@@ -58,12 +58,13 @@
                         <h2><a href="/swolemates/user/{{user.username}}/friends">Friends</a></h2>
                             {% for friend in friends %}
                                 <div class="profile_friend_tile">
-                                    <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}}'s profile pic">
+                                    <img src="/media/{{friend.profile_photo}}" alt="{{friend.username}}'s profile pic">
                                     <div class="tile_text">
                                         <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                                         <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                                        
                                         <!-- REMOVE FRIEND -->
-                                        <form action="/swolemates/user/request/{{ friend.username }}/remove_friend" method="POST">
+                                        <form action="/swolemates/request/{{ friend.username }}/remove_friend" method="POST">
                                             {% csrf_token %}
                                             <input type="submit" value="Remove Friend">
                                         </form>
@@ -75,7 +76,7 @@
                         <h2>Friend Requests</h2>
                         {% for person in user_friend_requests %}
                             <div class="profile_friend_tile">
-                                <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                                <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                                 <div class="tile_text">
                                     <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                     <p>{{ person.first_name }} {{ person.last_name }}</p>
@@ -100,7 +101,7 @@
                             {% for person in all_others %}
                                 {% if person not in friends and person not in user_friend_requests and person not in user_sent_requests %}
                                     <div class="home_friend_tile">
-                                        <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                                        <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                                         <div class="tile_text">
                                             <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                             <p>{{ person.first_name }} {{ person.last_name }}</p>
@@ -119,7 +120,7 @@
                         <h2>Your Workouts</h2>
                         {% for workout in user_workouts %}
                             <div class="workout_tile">
-                                <img src="/media/images/{{user.profile_photo}}" alt="profile pic">
+                                <img src="/media/{{user.profile_photo}}" alt="profile pic">
                                 <div class="tile_text">
                                     <h3><a href="">{{ workout.created_by.username }}</a></h3>
                                     <p>{{ workout.created_by.first_name }} {{ workout.created_by.last_name }}</p>

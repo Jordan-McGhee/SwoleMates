@@ -19,8 +19,8 @@
     {% endfor %}
 
     {% if user == workout.created_by %}
-    <a href="">Edit Workout</a>
-    <form action="workout/{{workout.id}}/delete" method="POST">
+    <a href="/swolemates/workout/{{workout.id}}/edit">Edit Workout</a>
+    <form action="{{workout.id}}/delete" method="POST">
         {% csrf_token %}
         <input type="submit" value="Delete Workout">
     </form>

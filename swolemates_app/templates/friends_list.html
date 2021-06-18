@@ -18,7 +18,7 @@
                 {% for friend in profile_friends %}
 
                     <div class="friends_list_tile_user">
-                        <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
+                        <img src="/media/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
                         <div class="tile_text">
                             <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                             <p>{{ friend.first_name }} {{ friend.last_name }}</p>
@@ -38,7 +38,7 @@
                         <h2>Friend Requests</h2>
                         {% for person in user_friend_requests %}
                             <div class="friends_friend_tile_right">
-                                <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                                <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                                 <div class="tile_text">
                                     <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                     <p>{{ person.first_name }} {{ person.last_name }}</p>
@@ -64,7 +64,7 @@
                     {% for person in all_others %}
                         {% if person not in profile_friends and person not in user_friend_requests and person not in user_sent_requests %}
                             <div class="friends_friend_tile_right">
-                                <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                                <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                                 <div class="tile_text">
                                     <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                     <p>{{ person.first_name }} {{ person.last_name }}</p>
@@ -88,7 +88,7 @@
                     <h2>Friend Requests</h2>
                     {% for person in user_friend_requests %}
                         <div class="friends_friend_tile_right">
-                            <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                            <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                             <div class="tile_text">
                                 <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                 <p>{{ person.first_name }} {{ person.last_name }}</p>
@@ -114,7 +114,7 @@
                     {% if person not in profile_friends and person not in user_friend_requests and person not in user_sent_requests %}
 
                         <div class="friend_tile">
-                            <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                            <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                             <div class="tile_text">
                                 <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                 <p>{{ person.first_name }} {{ person.last_name }}</p>
@@ -141,7 +141,7 @@
                 {% for friend in profile_friends %}
 
                     <div class="friends_list_tile">
-                        <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
+                        <img src="/media/{{friend.profile_photo}}" alt="{{friend.username}} profile pic">
                         <div class="tile_text">
                             <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                             <p>{{ friend.first_name }} {{ friend.last_name }}</p>

@@ -9,7 +9,8 @@
 <body>
     <h1>Edit Profile</h1>
 
-    <form action="">
+    <form action="update" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <label for="profile_photo" method="POST" enctype="multipart/form-data">Change Profile Photo</label>
         <input type="file" name="profile_photo">
         
@@ -18,7 +19,8 @@
 
         <label for="fav_exercises">Change Favorite Exercises</label>
         <textarea name="fav_exercises" id="" cols="15" rows="5">{{user.fav_exercises}}</textarea>
-
+        
+        <input type="submit" value="UPDATE">
     </form>
 </body>
 </html>
