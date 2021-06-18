@@ -9,7 +9,7 @@
 <body>
     <!-- HOME - DELETE LATER--> <a href="/swolemates">HOME</a>
     <h1>Edit Workout:</h1>
-    <form action="workout/{{workout.id}}/update" method="POST">
+    <form action="update" method="POST">
         {% csrf_token %}
         
         <div id="workout_name">
@@ -58,14 +58,16 @@
                             <option value="19">19</option>
                             <option value="20">20</option>
                         </select>
+                        <p>{{forloop.counter}}</p>
                     </div>
                 </div>
             </div>
 
 
         {% endfor %}
-
-        <form action="{{workout.id}}/delete" method="POST">
+            <input type="submit" value="Update Workout">
+        </form>
+        <form action="delete" method="POST">
             {% csrf_token %}
             <input type="submit" value="Delete Workout">
         </form>

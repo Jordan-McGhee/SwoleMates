@@ -122,8 +122,8 @@
                             <div class="workout_tile">
                                 <img src="/media/{{user.profile_photo}}" alt="profile pic">
                                 <div class="tile_text">
-                                    <h3><a href="">{{ workout.created_by.username }}</a></h3>
-                                    <p>{{ workout.created_by.first_name }} {{ workout.created_by.last_name }}</p>
+                                    <h3><a href="/swolemates/workout/{{workout.id}}">{{ workout.name }}</a></h3>
+                                <p>Created By: {{user.username}} on {{user.created_at}}</p>
                                 </div>
                             </div>
                         {% endfor %}

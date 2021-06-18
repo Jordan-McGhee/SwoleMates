@@ -447,16 +447,16 @@ def workout_edit(request, id):
 def workout_update(request, id):
     workout = Workout.objects.get(id=id)
 
-    # ADD THIS
     workout.name = request.POST['workout_name']
 
-    for exercise in workout.exercises:
-        counter = 1
-        exercise.name = request.POST[f'name{counter}']
-        exercise.set_count = request.POST[f'sets{counter}']
-        exercise.rep_count = request.POST[f'reps{counter}']
+    for i,exercise in enumerate(workout.exercises.all()):
+        
+        exercise.name = request.POST[f'name{i+1}']
+        exercise.set_count = request.POST[f'sets{i+1}']
+        exercise.rep_count = request.POST[f'reps{i+1}']
+
         exercise.save()
-        counter += 1
+        
 
     workout.save()
 
