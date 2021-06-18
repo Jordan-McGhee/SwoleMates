@@ -88,7 +88,6 @@ def home(request):
         "user_workouts": user.workouts.all(),
         "user_friend_requests": user_received_request_objects,
         "user_sent_requests": user_sent_request_objects
-        # "friends_workouts": friends.workouts
     }
 
     return render(request, "home.html", context)
@@ -203,6 +202,24 @@ def profile(request, username):
 
 
     return render(request, "profile.html", context)
+
+def profile_edit(request,username):
+    context = {
+        "user": User.objects.get(id=request.session['user_id'])
+    }
+
+    return render(request,"edit_profile.html", context)
+
+def profile_update(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+
+        user.profile_photo = request.FILES.get("profile_photo") or user.profile_photo
+        user.bio = request.POST['bio']
+        user.fav_exercises = request.POST['fav_exercises']
+        user.save()
+        
+    return redirect(f'/swolemates/user/{user.username}')
 
 def profile_post_create(request, username):
     if request.method == "POST":

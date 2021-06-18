@@ -29,6 +29,7 @@
             <div id="make_post">
                 <form action="swolemates/home_post_create" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
+                    <input type="file" name="image">
                     <input type="text" value="Post something" name="content">
                     <input type="submit" value="POST">
                 </form>
@@ -36,13 +37,16 @@
 
             <div id="post_wrapper">
                 {% for post in posts reversed %}
-                    {% if post.posted_by in user.friends or post.posted_by == user %}
-                    <div class="post">
-                        <h3>{{ post.posted_by }}</h3>
-                        <p>{{ post.created_at }}</p>
-                        <p>{{ post.content }}</p>
-                    </div>
-                    {% endif %}
+                    {% for friend in friends %}
+                        {% if post.posted_by == friend or post.posted_by == user %}
+                        <div class="post">
+                            <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
+                            <h3><a href="/swolemates/user/{{post.posted_by}}">{{ post.posted_by }}</a></h3>
+                            <p>{{ post.created_at }}</p>
+                            <p>{{ post.content }}</p>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
             </div>
 

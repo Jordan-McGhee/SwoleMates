@@ -13,6 +13,8 @@ urlpatterns = [
     path('swolemates/request/<str:username>/deny_request', views.home_deny_friend_request),
     path('swolemates/request/<str:username>/remove_friend', views.home_remove_friend),
     path('swolemates/user/<str:username>', views.profile),
+    path('swolemates/user/<str:username>/edit', views.profile_edit),
+    path('swolemates/user/<str:username>/update', views.profile_update),
     path('swolemates/user/<str:username>/profile_post_create', views.profile_post_create),
     path('swolemates/user/request/<str:username>/send_request', views.profile_send_friend_request),
     path('swolemates/user/request/<str:username>/accept_request', views.profile_accept_friend_request),

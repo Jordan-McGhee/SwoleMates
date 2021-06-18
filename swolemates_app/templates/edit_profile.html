@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+</head>
+<body>
+    <h1>Edit Profile</h1>
+
+    <form action="">
+        <label for="profile_photo" method="POST" enctype="multipart/form-data">Change Profile Photo</label>
+        <input type="file" name="profile_photo">
+        
+        <label for="bio">Update Bio</label>
+        <textarea name="bio" id="" cols="15" rows="5">{{user.bio}}</textarea>
+
+        <label for="fav_exercises">Change Favorite Exercises</label>
+        <textarea name="fav_exercises" id="" cols="15" rows="5">{{user.fav_exercises}}</textarea>
+
+    </form>
+</body>
+</html>
