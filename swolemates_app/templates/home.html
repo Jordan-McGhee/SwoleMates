@@ -61,32 +61,48 @@
                                     </div>
                                 </div>
                             {% endfor %}
+                    {% endif %}
+                    {% if user_friend_requests %}
+                        <h2>Friend Requests</h2>
+                        {% for person in user_friend_requests %}
+                            <div class="profile_friend_tile">
+                                <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                                <div class="tile_text">
+                                    <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
+                                    <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                    
+                                    <!-- ACCEPT REQUEST -->
+                                    <form action="/swolemates/request/{{ person.username }}/accept_request" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Accept Friend Request">
+                                    </form>
+                                    
+                                    <!-- DENY REQUEST -->
+                                    <form action="/swolemates/request/{{ person.username }}/deny_request" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Deny Friend Request">
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
                         <h2>Add Friends</h2>
                             {% for person in all_others %}
-                                {% if person not in friends %}
-                                    <div class="profile_friend_tile">
+                                {% if person not in friends and person not in user_friend_requests and person not in user_sent_requests %}
+                                    <div class="home_friend_tile">
                                         <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                                         <div class="tile_text">
                                             <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                             <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                            <form action="/swolemates/request/{{ person.username }}/send_request" method="POST">
+                                                {% csrf_token %}
+                                                <input type="submit" value="Send Friend Request">
+                                            </form>
                                         </div>
                                     </div>
                                 {% endif %}
                             {% endfor %}
-                    {% else %}
-
-                        <h2>Add Friends</h2>
-                            {% for person in all_others %}
-                            <div class="friend_tile">
-                                <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}}'s profile pic">
-                                <div class="tile_text">
-                                    <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
-                                    <p>{{ person.first_name }} {{ person.last_name }}</p>
-                                </div>
-                            </div>
-                            {% endfor %}
-
-                    {% endif %}
                 </div>
 
                 <div id="main_workouts">
@@ -102,7 +118,7 @@
                             </div>
                         {% endfor %}
                     {% endif %}
-                    <h3><a href="">Create a Workout</a></h3>
+                    <h3><a href="/swolemates/workout">Create a Workout</a></h3>
                 </div>
 
             </div>

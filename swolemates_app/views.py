@@ -52,16 +52,79 @@ def home(request):
     friends = user.friends.all()
     all_other_users = User.objects.exclude(id=user.id)
 
+    # grabs all friend request objects involving user
+
+    # USER SENT
+    user_sent_friend_requests = Friend_Request.objects.filter(sender = user)
+    
+    # USER RECEIVED
+    user_received_friend_requests = Friend_Request.objects.filter(receiver = user)
+
+    # empty lists to append usernames & objects to
+
+    user_sent_request_usernames = []
+    user_sent_request_objects = []
+    
+    user_received_request_usernames = []
+    user_received_request_objects = []
+
+    for i in range(len(user_sent_friend_requests)):
+        user_sent_request_usernames.append(user_sent_friend_requests[i].receiver)
+        user_sent_request_objects.append(User.objects.get(username=user_sent_friend_requests[i].receiver))
+
+    print(f"{user.username} has sent requests to the following users: {user_sent_request_usernames}")
+
+    for i in range(len(user_received_friend_requests)):
+        user_received_request_usernames.append(user_received_friend_requests[i].sender)
+        user_received_request_objects.append(user_received_friend_requests[i].sender)
+
+    print(f"{user.username} has received requests from the following users: {user_received_request_usernames}. Objects: {user_received_request_objects}")
+
     context = {
         "user": user,
         "posts": all_posts,
         "friends": friends,
         "all_others": all_other_users,
-        "user_workouts": user.workouts.all()
+        "user_workouts": user.workouts.all(),
+        "user_friend_requests": user_received_request_objects,
+        "user_sent_requests": user_sent_request_objects
         # "friends_workouts": friends.workouts
     }
 
     return render(request, "home.html", context)
+
+def home_send_friend_request(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        new_friend = User.objects.get(username = username)
+        user_sent_friend_requests = Friend_Request.objects.filter(sender = user)
+
+        Friend_Request.objects.create(sender=user, receiver=new_friend)
+
+        print(f"{user.username} sent request to {new_friend.username}. User's sent requests: {user_sent_friend_requests}")
+
+    return redirect(f'/swolemates')
+
+def home_accept_friend_request(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        new_friend = User.objects.get(username = username)
+        friend_request = Friend_Request.objects.get(sender = new_friend, receiver = user)
+
+        user.friends.add(new_friend)
+        friend_request.delete()
+
+    return redirect('/swolemates')
+
+def home_deny_friend_request(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        new_friend = User.objects.get(username = username)
+        friend_request = Friend_Request.objects.get(sender = new_friend, receiver = user)
+
+        friend_request.delete()
+
+    return redirect('/swolemates')
 
 def home_post_create(request):
     user = User.objects.get(id=request.session['user_id'])
@@ -87,16 +150,49 @@ def home_post_create(request):
 def profile(request, username):
     user = User.objects.get(id=request.session['user_id'])
     profile = User.objects.get(username=username)
-    print(profile.first_name)
+
+    # grabs all friend request objects involving user
+
+    # USER SENT
+    user_sent_friend_requests = Friend_Request.objects.filter(sender = user)
+    
+    # USER RECEIVED
+    user_received_friend_requests = Friend_Request.objects.filter(receiver = user)
+
+    # empty lists to append usernames & objects to
+
+    user_sent_request_usernames = []
+    user_sent_request_objects = []
+    
+    user_received_request_usernames = []
+    user_received_request_objects = []
+
+    for i in range(len(user_sent_friend_requests)):
+        user_sent_request_usernames.append(user_sent_friend_requests[i].receiver)
+        user_sent_request_objects.append(User.objects.get(username=user_sent_friend_requests[i].receiver))
+
+    print(f"{user.username} has sent requests to the following users: {user_sent_request_usernames}")
+
+    for i in range(len(user_received_friend_requests)):
+        user_received_request_usernames.append(user_received_friend_requests[i].sender)
+        user_received_request_objects.append(user_received_friend_requests[i].sender)
+
+    print(f"{user.username} has received requests from the following users: {user_received_request_usernames}. Objects: {user_received_request_objects}")
+
 
     context = {
         "user": user,
         "profile": profile,
         "posts": profile.posts.all(),
+        "user_friends": user.friends.all(),
         "profile_friends": profile.friends.all(),
         "all_others": User.objects.exclude(id=user.id),
-        "profile_workouts": profile.workouts.all()
+        "profile_workouts": profile.workouts.all(),
+        "user_friend_requests": user_received_request_objects,
+        # "user_friend_requests_usernames": user_received_request_usernames,
+        "user_sent_requests": user_sent_request_objects
     }
+
 
     return render(request, "profile.html", context)
 
@@ -117,6 +213,39 @@ def profile_post_create(request, username):
         
     return redirect(f'/swolemates/user/{username}')
 
+def profile_send_friend_request(request, username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        new_friend = User.objects.get(username = username)
+        user_sent_friend_requests = Friend_Request.objects.filter(sender = user)
+
+        Friend_Request.objects.create(sender=user, receiver=new_friend)
+
+        print(f"{user.username} sent request to {new_friend.username}. User's sent requests: {user_sent_friend_requests}")
+
+    return redirect(f'/swolemates/user/{user.username}')
+
+def profile_accept_friend_request(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        new_friend = User.objects.get(username = username)
+        friend_request = Friend_Request.objects.get(sender = new_friend, receiver = user)
+
+        user.friends.add(new_friend)
+        friend_request.delete()
+
+    return redirect(f'/swolemates/user/{user.username}')
+
+def profile_deny_friend_request(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        new_friend = User.objects.get(username = username)
+        friend_request = Friend_Request.objects.get(sender = new_friend, receiver = user)
+
+        friend_request.delete()
+
+    return redirect(f'/swolemates/user/{user.username}')
+
 
 # FRIENDS LIST
 
@@ -124,14 +253,78 @@ def friends_list(request, username):
     user = User.objects.get(id=request.session['user_id'])
     profile = User.objects.get(username=username)
     
+    # grabs all friend request objects involving user
+
+    # USER SENT
+    user_sent_friend_requests = Friend_Request.objects.filter(sender = user)
+    
+    # USER RECEIVED
+    user_received_friend_requests = Friend_Request.objects.filter(receiver = user)
+
+    # empty lists to append usernames & objects to
+
+    user_sent_request_usernames = []
+    user_sent_request_objects = []
+    
+    user_received_request_usernames = []
+    user_received_request_objects = []
+
+    for i in range(len(user_sent_friend_requests)):
+        user_sent_request_usernames.append(user_sent_friend_requests[i].receiver)
+        user_sent_request_objects.append(User.objects.get(username=user_sent_friend_requests[i].receiver))
+
+    print(f"{user.username} has sent requests to the following users: {user_sent_request_usernames}")
+
+    for i in range(len(user_received_friend_requests)):
+        user_received_request_usernames.append(user_received_friend_requests[i].sender)
+        user_received_request_objects.append(user_received_friend_requests[i].sender)
+
+    print(f"{user.username} has received requests from the following users: {user_received_request_usernames}. Objects: {user_received_request_objects}")
+
     context = {
         "user": user,
         "profile": profile,
         "profile_friends": profile.friends.all(),
-        "all_others": User.objects.exclude(id=user.id)
+        "all_others": User.objects.exclude(id=user.id),
+        "user_friend_requests": user_received_request_objects,
+        # "user_friend_requests_usernames": user_received_request_usernames,
+        "user_sent_requests": user_sent_request_objects
     }
 
     return render(request, "friends_list.html", context)
+
+def friends_send_friend_request(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        new_friend = User.objects.get(username = username)
+        user_sent_friend_requests = Friend_Request.objects.filter(sender = user)
+
+        Friend_Request.objects.create(sender=user, receiver=new_friend)
+
+        print(f"{user.username} sent request to {new_friend.username}. User's sent requests: {user_sent_friend_requests}")
+
+    return redirect(f'/swolemates/user/{user.username}/friends')
+
+def friends_accept_friend_request(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        new_friend = User.objects.get(username = username)
+        friend_request = Friend_Request.objects.get(sender = new_friend, receiver = user)
+
+        user.friends.add(new_friend)
+        friend_request.delete()
+
+    return redirect(f'/swolemates/user/{user.username}/friends')
+
+def friends_deny_friend_request(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        new_friend = User.objects.get(username = username)
+        friend_request = Friend_Request.objects.get(sender = new_friend, receiver = user)
+
+        friend_request.delete()
+
+    return redirect(f'/swolemates/user/{user.username}/friends')
 
 # WORKOUT LIST
 
@@ -221,4 +414,3 @@ def workout_delete(request, id):
         workout.delete()
 
         return redirect(f"swolemates/user/{user.username}/workouts")
-

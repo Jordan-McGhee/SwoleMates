@@ -9,6 +9,8 @@
 <body>
     <!-- HOME - DELETE LATER--> <a href="/swolemates">HOME</a>
     <div id="wrapper">
+        
+        <!-- IF USER PAGE -->
         {% if user == profile %}
             <h2>Your Friends</h2>
             {% if profile_friends %}
@@ -25,37 +27,108 @@
 
                 {% endfor %}
 
-                <h2>Add Friends</h2>
-                <div id="friends_add_friends">
-                    {% for person in all_others %}
-                        {% if person not in profile_friends %}
-                            <div class="friends_list_tile_right">
+                    <!-- IF USER HAS PENDING FRIEND REQUESTS -->
+                    {% if user_friend_requests %}
+                        <h2>Friend Requests</h2>
+                        {% for person in user_friend_requests %}
+                            <div class="friends_friend_tile_right">
                                 <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
                                 <div class="tile_text">
                                     <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
                                     <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                    
+                                    <!-- ACCEPT REQUEST -->
+                                    <form action="/swolemates/friends/request/{{ person.username }}/accept_request" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Accept Friend Request">
+                                    </form>
+                                    
+                                    <!-- DENY REQUEST -->
+                                    <form action="/swolemates/friends/request/{{ person.username }}/deny_request" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Deny Friend Request">
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <h2>Add Friends</h2>
+                    <!-- ALL OTHERS THAT ARE NOT FRIENDS/PENDING FRIENDS WITH USER -->
+                    {% for person in all_others %}
+                        {% if person not in profile_friends and person not in user_friend_requests and person not in user_sent_requests %}
+                            <div class="friends_friend_tile_right">
+                                <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                                <div class="tile_text">
+                                    <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
+                                    <p>{{ person.first_name }} {{ person.last_name }}</p>
+
+                                    <!-- SEND REQUEST -->
+                                    <form action="/swolemates/friends/request/{{ person.username }}/send_request" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Send Friend Request">
+                                    </form>
                                 </div>
                             </div>
                         {% endif %}
                     {% endfor %}
-                </div>
 
             {% else %}
+                <!-- USER DOESN'T HAVE FRIENDS YET -->
 
                 <h2>You don't have friends yet — Add some!</h2>
-                {% for person in all_others %}
-                    <div class="friend_tile">
-                        <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
-                        <div class="tile_text">
-                            <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
-                            <p>{{ person.first_name }} {{ person.last_name }}</p>
+
+                {% if user_friend_requests %}
+                    <h2>Friend Requests</h2>
+                    {% for person in user_friend_requests %}
+                        <div class="friends_friend_tile_right">
+                            <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                            <div class="tile_text">
+                                <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
+                                <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                
+                                <!-- ACCEPT REQUEST -->
+                                <form action="/swolemates/friends/request/{{ person.username }}/accept_request" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Accept Friend Request">
+                                </form>
+                                
+                                <!-- DENY REQUEST -->
+                                <form action="/swolemates/friends/request/{{ person.username }}/deny_request" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Deny Friend Request">
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    {% endfor %}
+                {% endif %}
+
+                <h2>Add Friends</h2>
+                {% for person in all_others %}
+                    {% if person not in profile_friends and person not in user_friend_requests and person not in user_sent_requests %}
+
+                        <div class="friend_tile">
+                            <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic">
+                            <div class="tile_text">
+                                <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
+                                <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                <!-- SEND REQUEST -->
+                                <form action="/swolemates/friends/request/{{ person.username }}/send_request" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Send Friend Request">
+                                </form>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
                 {% endfor %}
 
             {% endif %}
         
         {% else %}
+
+        <!-- NOT USER'S PROFILE -->
             <h2>{{profile.username}}'s Friends</h2>
             {% if profile_friends %}
 
@@ -66,6 +139,13 @@
                         <div class="tile_text">
                             <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                             <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                            {% if person not in profile_friends and person not in user_friend_requests and person not in user_sent_requests %}
+                                <!-- SEND REQUEST -->
+                                <form action="/swolemates/friends/request/{{ person.username }}/send_request" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Send Friend Request">
+                                </form>
+                            {% endif %}
                         </div>
                     </div>
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import related
 import bcrypt
 import re
 
@@ -24,7 +25,7 @@ class UserManager(models.Manager):
         if not postData['last_name'].isalpha():
             errors['last_name_alpha'] = "Last name must contain letters only"
 
-        if len(postData['username']) < 6:
+        if len(postData['username']) < 5:
             errors['username'] = "Username must be at least 6 letters long"
         
         for char in forbidden_chars:
@@ -98,15 +99,21 @@ class User(models.Model):
     objects = UserManager()
 
     # friend_request = models.ManyToManyField("self") not symmetrical?
-    friend_requests = models.ManyToManyField('self', symmetrical=False, blank=True, null=True)
+    # friend_requests = models.ManyToManyField('self', symmetrical=False, blank=True)
+    # sent_friend_requests = models.ManyToManyField('self', symmetrical=False, blank=True, related_name="sent_requests")
     # use many to many for friends, first argument = "self", related_name = "friends", this would be symmetrical?
-    friends = models.ManyToManyField('self', blank=True, null=True)
+    friends = models.ManyToManyField('self', blank=True)
 
     # Space for O2M & M2M Relationships
+    # sender in Friend_Request class
+    # receiver in Friend_Request class
+
     # posts > posted_by in Post class
     # liked_posts > liked_by in Post class
+
     # comments > posted_by in Comment class
     # liked_comments > liked_by in Comment class
+
     # workouts > created_by in Workout class
     # liked_workouts > liked_by in Workout class
 
@@ -116,6 +123,14 @@ class User(models.Model):
     def __str__(self):
         return self.username
 
+class Friend_Request(models.Model):
+    sender = models.ForeignKey(User, related_name="sender", on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name="receiver", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Sender: {self.sender.username}. Receiver: {self.receiver.username}"
 
 class Post(models.Model):
     content = models.TextField()
