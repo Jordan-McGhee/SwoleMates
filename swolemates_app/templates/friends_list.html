@@ -22,6 +22,12 @@
                         <div class="tile_text">
                             <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                             <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+
+                            <!-- REMOVE FRIEND -->
+                            <form action="/swolemates/user/request/{{ friend.username }}/remove_friend" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" value="Remove Friend">
+                            </form>
                         </div>
                     </div>
 
@@ -139,12 +145,21 @@
                         <div class="tile_text">
                             <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                             <p>{{ friend.first_name }} {{ friend.last_name }}</p>
-                            {% if person not in profile_friends and person not in user_friend_requests and person not in user_sent_requests %}
+                            {% if friend not in profile_friends and friend not in user_friend_requests and friend not in user_sent_requests %}
                                 <!-- SEND REQUEST -->
-                                <form action="/swolemates/friends/request/{{ person.username }}/send_request" method="POST">
+                                <form action="/swolemates/friends/request/{{ friend.username }}/send_request" method="POST">
                                     {% csrf_token %}
                                     <input type="submit" value="Send Friend Request">
                                 </form>
+
+                            {% elif friend != user %}
+
+                                <!-- REMOVE FRIEND -->
+                                <form action="/swolemates/user/request/{{ friend.username }}/remove_friend" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Remove Friend">
+                                </form>
+                                
                             {% endif %}
                         </div>
                     </div>

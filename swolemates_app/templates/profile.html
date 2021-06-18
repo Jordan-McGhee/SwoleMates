@@ -24,6 +24,13 @@
                 {% csrf_token %}
                 <input type="submit" value="Send Friend Request">
             </form>
+        {% elif profile != user %}
+            
+            <!-- REMOVE FRIEND -->
+            <form action="/swolemates/user/request/{{ profile.username }}/remove_friend" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Remove Friend">
+            </form>
         {% endif %}
 
         {% if profile.bio %}
@@ -78,6 +85,12 @@
                             <div class="tile_text">
                                 <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                                 <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                                
+                                <!-- REMOVE FRIEND -->
+                                <form action="/swolemates/user/request/{{ friend.username }}/remove_friend" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Remove Friend">
+                                </form>
                             </div>
                         </div>
                     {% endfor %}
@@ -152,6 +165,15 @@
                                         {% csrf_token %}
                                         <input type="submit" value="Send Friend Request">
                                     </form>
+                                
+                                {% elif friend != user %}
+
+                                    <!-- REMOVE FRIEND -->
+                                    <form action="/swolemates/user/request/{{ friend.username }}/remove_friend" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Remove Friend">
+                                    </form>
+                                
                                 {% endif %}
                             </div>
                         </div>

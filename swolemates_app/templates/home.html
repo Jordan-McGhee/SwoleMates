@@ -51,13 +51,18 @@
                 <div id="main_friends_list">
                     {% if friends %}
 
-                        <h2>Friends</h2>
+                        <h2><a href="/swolemates/user/{{user.username}}/friends">Friends</a></h2>
                             {% for friend in friends %}
                                 <div class="profile_friend_tile">
                                     <img src="/media/images/{{friend.profile_photo}}" alt="{{friend.username}}'s profile pic">
                                     <div class="tile_text">
                                         <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
                                         <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                                        <!-- REMOVE FRIEND -->
+                                        <form action="/swolemates/user/request/{{ friend.username }}/remove_friend" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" value="Remove Friend">
+                                        </form>
                                     </div>
                                 </div>
                             {% endfor %}

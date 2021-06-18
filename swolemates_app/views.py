@@ -145,6 +145,14 @@ def home_post_create(request):
         
     return redirect('/swolemates')
 
+def home_remove_friend(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        removed_friend = User.objects.get(username = username)
+        
+        user.friends.remove(removed_friend)
+
+    return redirect(f'/swolemates')
 # PROFILE PAGE
 
 def profile(request, username):
@@ -246,6 +254,15 @@ def profile_deny_friend_request(request,username):
 
     return redirect(f'/swolemates/user/{user.username}')
 
+def profile_remove_friend(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        removed_friend = User.objects.get(username = username)
+        
+        user.friends.remove(removed_friend)
+
+    return redirect(f'/swolemates/user/{user.username}')
+
 
 # FRIENDS LIST
 
@@ -323,6 +340,15 @@ def friends_deny_friend_request(request,username):
         friend_request = Friend_Request.objects.get(sender = new_friend, receiver = user)
 
         friend_request.delete()
+
+    return redirect(f'/swolemates/user/{user.username}/friends')
+
+def friends_remove_friend(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        removed_friend = User.objects.get(username = username)
+        
+        user.friends.remove(removed_friend)
 
     return redirect(f'/swolemates/user/{user.username}/friends')
 
