@@ -132,11 +132,37 @@ class Friend_Request(models.Model):
     def __str__(self):
         return f"Sender: {self.sender.username}. Receiver: {self.receiver.username}"
 
+class Workout(models.Model):
+    # exercises > workout in Exercise class
+    # posts > workout in Post class
+    name = models.CharField(max_length=50)
+    created_by = models.ForeignKey(User, related_name="workouts", on_delete=models.CASCADE)
+    liked_by = models.ManyToManyField(User, related_name="liked_workouts", blank=True)
+    objects = WorkoutManager()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.created_by}/Workout/{self.id}/{self.name}"
+
+
+class Exercise(models.Model):
+    workout = models.ForeignKey(Workout, related_name="exercises", on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    set_count = models.IntegerField()
+    rep_count = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"workout/{self.workout.name}/exercise/{self.id}"
+
 class Post(models.Model):
     content = models.TextField()
     image = models.ImageField(null=True, blank=True, upload_to = "images/")
     posted_by = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
     liked_by = models.ManyToManyField(User, related_name="liked_posts", blank=True)
+    workout = models.ForeignKey(Workout, null=True, blank=True, related_name="posts", on_delete=models.SET_NULL)
     objects = PostCommentManager()
     # Space for O2M & M2M Relationships
     # comments > post in Comment class
@@ -158,27 +184,3 @@ class Comment(models.Model):
     
     def __str__(self):
         return f"{self.posted_by}/Comment/{self.id}"
-
-class Workout(models.Model):
-    # exercises > workout in Exercise class
-    name = models.CharField(max_length=50)
-    created_by = models.ForeignKey(User, related_name="workouts", on_delete=models.CASCADE)
-    liked_by = models.ManyToManyField(User, related_name="liked_workouts", blank=True)
-    objects = WorkoutManager()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.created_by}/Workout/{self.id}"
-
-
-class Exercise(models.Model):
-    workout = models.ForeignKey(Workout, related_name="exercises", on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    set_count = models.IntegerField()
-    rep_count = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"workout/{self.workout.name}/exercise/{self.id}"

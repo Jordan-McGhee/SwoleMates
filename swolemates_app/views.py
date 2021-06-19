@@ -159,11 +159,25 @@ def home_post_create(request):
                     messages.error(request, v)
             return redirect('/swolemates')
         
-        Post.objects.create(
-            content = request.POST['content'],
-            image = request.FILES.get('image'),
-            posted_by = User.objects.get(id = user.id)
-        )
+
+        if request.POST['workout'] != "none":
+            workout = Workout.objects.get(id=request.POST['workout'])
+
+            post = Post.objects.create(
+                content = request.POST['content'],
+                image = request.FILES.get('image'),
+                posted_by = User.objects.get(id=user.id),
+                workout = workout
+            )
+            print(f"WORKOUT ADDED TO POST: {workout.name}")
+            print(f"POST.WORKOUT = {post.workout}")
+
+        else:
+            Post.objects.create(
+                content = request.POST['content'],
+                image = request.FILES.get('image'),
+                posted_by = User.objects.get(id = user.id)
+            )
         
     return redirect('/swolemates')
 
@@ -322,11 +336,24 @@ def profile_post_create(request, username):
                 messages.error(request, v)
             return redirect(f'/swolemates/user/{username}')
         
-        Post.objects.create(
-            content = request.POST['content'],
-            image = request.FILES.get('image'),
-            posted_by = User.objects.get(username=username)
-        )
+        if request.POST['workout'] != "none":
+            workout = Workout.objects.get(id=request.POST['workout'])
+
+            post = Post.objects.create(
+                content = request.POST['content'],
+                image = request.FILES.get('image'),
+                posted_by = User.objects.get(username=username),
+                workout = workout
+            )
+            print(f"WORKOUT ADDED TO POST: {workout.name}")
+            print(f"POST.WORKOUT = {post.workout}")
+
+        else:
+            Post.objects.create(
+                content = request.POST['content'],
+                image = request.FILES.get('image'),
+                posted_by = User.objects.get(username=username)
+            )
         
     return redirect(f'/swolemates/user/{username}')
 

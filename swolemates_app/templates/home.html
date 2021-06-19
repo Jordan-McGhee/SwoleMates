@@ -29,9 +29,21 @@
             <div id="make_post">
                 <form action="swolemates/home_post_create" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
+
+                    <!-- ADD WORKOUT TO POST -->
+                    {% if user_workouts %}
+                        <select name="workout" id="">
+                            <option value="none" selected>Add A Workout?</option>
+                            {% for workout in user_workouts %}
+                                <option value="{{workout.id}}">{{workout.name}}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+
                     <input type="file" name="image">
-                    <input type="text" value="Post something" name="content">
+                    <textarea name="content" id="" cols="50" rows="5" placeholder="Post Something"></textarea>
                     <input type="submit" value="POST">
+
                 </form>
             </div>
 
@@ -42,6 +54,15 @@
                         {% if post.image %}
                             <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
                         {% endif %}
+
+                        {% if post.workout %}
+                            <a href="/swolemates/workout/{{post.workout.id}}">{{post.workout.name}}</a>
+                            {% for exercise in post.workout.exercises.all %}
+                                <h5>Exercise: {{exercise.name}}</h5>
+                                <p>{{exercise.set_count}}x{{exercise.rep_count}}</p>
+                            {% endfor %}
+                        {% endif %}
+
                         <img src='/media/{{user.profile_photo}}' alt = "profile photo" height="30px">
                         <h3>{{ post.posted_by }}</h3>
                         <p>{{ post.updated_at }}</p>
