@@ -138,6 +138,16 @@ def home_deny_friend_request(request,username):
 
     return redirect('/swolemates')
 
+def home_remove_friend(request,username):
+    if request.method == "POST":
+        user = User.objects.get(id=request.session['user_id'])
+        removed_friend = User.objects.get(username = username)
+        
+        user.friends.remove(removed_friend)
+
+    return redirect(f'/swolemates')
+
+# HOME POST/COMMENT/LIKE CREATE/EDIT/DELETE
 def home_post_create(request):
     user = User.objects.get(id=request.session['user_id'])
     if request.method == "POST":
@@ -157,14 +167,76 @@ def home_post_create(request):
         
     return redirect('/swolemates')
 
-def home_remove_friend(request,username):
+def home_post_add_like(request,post_id):
     if request.method == "POST":
+
         user = User.objects.get(id=request.session['user_id'])
-        removed_friend = User.objects.get(username = username)
-        
-        user.friends.remove(removed_friend)
+        post = Post.objects.get(id=post_id)
+
+        user.liked_posts.add(post)
+        # post.liked_by.add(user)
+        print(user.liked_posts)
 
     return redirect(f'/swolemates')
+
+def home_post_remove_like(request,post_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        post = Post.objects.get(id=post_id)
+
+        post.liked_by.remove(user)
+
+    return redirect(f'/swolemates')
+
+
+def home_post_add_comment(request,post_id):
+    if request.method == "POST":
+        errors = Comment.objects.validator(request.POST)
+
+        if len(errors) > 0:
+            for k, v in errors.items():
+                messages.error(request, v)
+            return redirect(f'/swolemates')
+
+        user = User.objects.get(id=request.session['user_id'])
+        post = Post.objects.get(id=post_id)
+
+        new_comment = Comment.objects.create(content=request.POST['content'], post=post,posted_by=user)
+
+    return redirect(f'/swolemates')
+
+def home_post_delete_comment(request,post_id,comment_id):
+    if request.method == "POST":
+
+        post = Post.objects.get(id=post_id)
+        comment = Comment.objects.get(id=comment_id)
+
+        comment.delete()
+
+    return redirect(f'/swolemates')
+
+def home_comment_add_like(request,comment_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        comment = Comment.objects.get(id=comment_id)
+
+        user.liked_comments.add(comment)
+
+    return redirect(f'/swolemates')
+
+def home_comment_remove_like(request,comment_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        comment = Comment.objects.get(id=comment_id)
+
+        user.liked_comments.remove(comment)
+
+    return redirect(f'/swolemates')
+
+
 
 
 
