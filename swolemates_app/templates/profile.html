@@ -63,17 +63,21 @@
         <div id="post_wrapper">
             {% for post in posts reversed %}
                 <div class="post">
-                    <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
+                    
+                    {% if post.image %}
+                        <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
+                    {% endif %}
                     <img src='/media/{{profile.profile_photo}}' alt = "profile photo" height="30px">
                     <h3>{{ post.posted_by }}</h3>
                     <p>{{ post.updated_at }}</p>
                     <p>{{ post.content }}</p>
+                    
                 </div>
 
-                <!-- LIKES -->
-                    <p>Liked By: {{post.liked_by}}</p>
-                    <p>{{post.liked_by|length}} Likes</p>
-                    {% if user in post.liked_by %}
+                <!-- ADD/REMOVE LIKES -->
+                    <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
+                    <p>{{post.liked_by.all|length}} Likes</p>
+                    {% if user in post.liked_by.all %}
                         <form action="{{post.posted_by}}/post/{{post.id}}/remove_like" method="POST">
                             {% csrf_token %}
                             <input type="submit" value="Unlike">
@@ -84,6 +88,8 @@
                             <input type="submit" value="Like">
                         </form>
                     {% endif %}
+
+
                 <!-- POST A COMMENT SECTION -->
                 <div class="profile_make_comment">
                     
@@ -101,6 +107,22 @@
                     <p>{{comment.updated_at}}</p>
                     <p>{{comment.content}}</p>
 
+                    <!-- ADD/REMOVE LIKES -->
+                    <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
+                    <p>{{comment.liked_by.all|length}} Likes</p>
+                    {% if user in comment.liked_by.all %}
+                        <form action="{{post.posted_by}}/comment/{{comment.id}}/remove_like" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" value="Unlike">
+                        </form>
+                    {% else %}
+                        <form action="{{post.posted_by}}/comment/{{comment.id}}/add_like" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" value="Like">
+                        </form>
+                    {% endif %}
+
+                    <!-- DELETE COMMENT -->
                     {% if comment.posted_by == user or profile == user %}
                         <form action="{{post.posted_by}}/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST">
                             {% csrf_token %}

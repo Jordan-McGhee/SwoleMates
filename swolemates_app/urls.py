@@ -24,6 +24,8 @@ urlpatterns = [
     path('swolemates/user/<str:username>/post/<int:post_id>/remove_like', views.profile_post_remove_like),
     path('swolemates/user/<str:username>/post/<int:post_id>/add_comment', views.profile_add_comment),
     path('swolemates/user/<str:username>/post/<int:post_id>/comment/<int:comment_id>/delete', views.profile_delete_comment),
+    path('swolemates/user/<str:username>/comment/<int:comment_id>/add_like', views.profile_comment_add_like),
+    path('swolemates/user/<str:username>/comment/<int:comment_id>/remove_like', views.profile_comment_remove_like),
     path('swolemates/user/<str:username>/friends', views.friends_list),
     path('swolemates/friends/request/<str:username>/send_request', views.friends_send_friend_request),
     path('swolemates/friends/request/<str:username>/accept_request', views.friends_accept_friend_request),

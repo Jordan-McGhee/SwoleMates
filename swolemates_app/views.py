@@ -258,6 +258,32 @@ def profile_post_create(request, username):
         
     return redirect(f'/swolemates/user/{username}')
 
+
+def profile_post_add_like(request,username,post_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        profile = User.objects.get(username=username)
+        post = Post.objects.get(id=post_id)
+
+        user.liked_posts.add(post)
+        # post.liked_by.add(user)
+        print(user.liked_posts)
+
+    return redirect(f'/swolemates/user/{username}')
+
+def profile_post_remove_like(request,username,post_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        profile = User.objects.get(username=username)
+        post = Post.objects.get(id=post_id)
+
+        post.liked_by.remove(user)
+
+    return redirect(f'/swolemates/user/{username}')
+
+
 def profile_add_comment(request,username,post_id):
     if request.method == "POST":
         errors = Comment.objects.validator(request.POST)
@@ -287,30 +313,25 @@ def profile_delete_comment(request,username,post_id,comment_id):
 
     return redirect(f'/swolemates/user/{username}')
 
-def profile_post_add_like(request,username,post_id):
+def profile_comment_add_like(request,username,comment_id):
     if request.method == "POST":
 
         user = User.objects.get(id=request.session['user_id'])
-        profile = User.objects.get(username=username)
-        post = Post.objects.get(id=post_id)
+        comment = Comment.objects.get(id=comment_id)
 
-        user.liked_posts.add(post)
-        # post.liked_by.add(user)
-        print(user.liked_posts)
+        user.liked_comments.add(comment)
 
     return redirect(f'/swolemates/user/{username}')
 
-def profile_post_remove_like(request,username,post_id):
+def profile_comment_remove_like(request,username,comment_id):
     if request.method == "POST":
 
         user = User.objects.get(id=request.session['user_id'])
-        profile = User.objects.get(username=username)
-        post = Post.objects.get(id=post_id)
+        comment = Comment.objects.get(id=comment_id)
 
-        post.liked_by.remove(user)
+        user.liked_comments.remove(comment)
 
-    return redirect(f'swolemates/user/{username}')
-
+    return redirect(f'/swolemates/user/{username}')
 
 
 # PROFILE SEND/ACCEPT/DENY/REMOVE FRIEND REQUESTS
