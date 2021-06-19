@@ -41,6 +41,7 @@ def logout(request):
     request.session.flush()
     return redirect('/')
 
+
 # MAIN PAGE
 
 def home(request):
@@ -165,6 +166,8 @@ def home_remove_friend(request,username):
 
     return redirect(f'/swolemates')
 
+
+
 # PROFILE PAGE
 
 def profile(request, username):
@@ -216,6 +219,8 @@ def profile(request, username):
 
     return render(request, "profile.html", context)
 
+# PROFILE EDIT/UPDATE
+
 def profile_edit(request,username):
     context = {
         "user": User.objects.get(id=request.session['user_id'])
@@ -234,6 +239,8 @@ def profile_update(request,username):
         
     return redirect(f'/swolemates/user/{user.username}')
 
+# PROFILE POST/COMMENT/LIKE CREATE/EDIT/DELETE
+
 def profile_post_create(request, username):
     if request.method == "POST":
         errors = Post.objects.validator(request.POST)
@@ -241,7 +248,7 @@ def profile_post_create(request, username):
         if len(errors) > 0:
             for k, v in errors.items():
                 messages.error(request, v)
-            return redirect(f'/swolemates/{username}')
+            return redirect(f'/swolemates/user/{username}')
         
         Post.objects.create(
             content = request.POST['content'],
@@ -250,6 +257,63 @@ def profile_post_create(request, username):
         )
         
     return redirect(f'/swolemates/user/{username}')
+
+def profile_add_comment(request,username,post_id):
+    if request.method == "POST":
+        errors = Comment.objects.validator(request.POST)
+
+        if len(errors) > 0:
+            for k, v in errors.items():
+                messages.error(request, v)
+            return redirect(f'/swolemates/user/{username}')
+
+        user = User.objects.get(id=request.session['user_id'])
+        profile = User.objects.get(username=username)
+        post = Post.objects.get(id=post_id)
+
+        new_comment = Comment.objects.create(content=request.POST['content'], post=post,posted_by=user)
+
+    return redirect(f'/swolemates/user/{username}')
+
+def profile_delete_comment(request,username,post_id,comment_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        profile = User.objects.get(username=username)
+        post = Post.objects.get(id=post_id)
+        comment = Comment.objects.get(id=comment_id)
+
+        comment.delete()
+
+    return redirect(f'/swolemates/user/{username}')
+
+def profile_post_add_like(request,username,post_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        profile = User.objects.get(username=username)
+        post = Post.objects.get(id=post_id)
+
+        user.liked_posts.add(post)
+        # post.liked_by.add(user)
+        print(user.liked_posts)
+
+    return redirect(f'/swolemates/user/{username}')
+
+def profile_post_remove_like(request,username,post_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        profile = User.objects.get(username=username)
+        post = Post.objects.get(id=post_id)
+
+        post.liked_by.remove(user)
+
+    return redirect(f'swolemates/user/{username}')
+
+
+
+# PROFILE SEND/ACCEPT/DENY/REMOVE FRIEND REQUESTS
 
 def profile_send_friend_request(request, username):
     if request.method == "POST":
