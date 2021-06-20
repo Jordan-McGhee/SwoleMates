@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{profile.username}}'s Post</title>
+</head>
+<body>
+    <!-- HOME - DELETE LATER--> <a href="/swolemates">HOME</a>
+    <h2>{{profile.username}}'s Post</h2>
+
+    <div id="post_wrapper">
+
+            <div class="post">
+                
+                <!-- POST's IMAGE -->
+                {% if post.image %}
+                    <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
+                {% endif %}
+
+                <!-- POST's WORKOUT -->
+                {% if post.workout %}
+                    <a href="/swolemates/workout/{{post.workout.id}}">{{post.workout.name}}</a>
+                    {% for exercise in post.workout.exercises.all %}
+                        <h5>Exercise: {{exercise.name}}</h5>
+                        <p>{{exercise.set_count}}x{{exercise.rep_count}}</p>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- PROFILE PHOTO AND POST INFO -->
+                <img src='/media/{{profile.profile_photo}}' alt = "profile photo" height="30px">
+                <h3><a href="/swolemates/user/{{post.posted_by}}">{{ post.posted_by }}</a></h3>
+                <p>{{ post.updated_at }}</p>
+                <p>{{ post.content }}</p>
+
+                <!-- IF USER's POST -->
+                {% if user == profile %}
+                    
+                    {% if post.posted_by == user %}
+                        
+                        <!-- EDIT POST -->
+                        <a href="/swolemates/post/{{post.id}}/edit">Edit Post</a>
+
+                        <!-- DELETE POST -->
+                        <form action="/swolemates/post/{{post.id}}/delete" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" value="Delete Post">
+                        </form>
+
+                    {% endif %}
+
+                {% endif %}
+            </div>
+
+            <!-- ADD/REMOVE LIKES -->
+                
+                <p>{{post.liked_by.all|length}} Likes</p>
+                {% if user in post.liked_by.all %}
+                    <form action="/swolemates/post/{{post.id}}/remove_like" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Unlike">
+                    </form>
+                {% else %}
+                    <form action="/swolemates/post/{{post.id}}/add_like" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Like">
+                    </form>
+                {% endif %}
+
+
+            <!-- POST A COMMENT SECTION -->
+            <div class="profile_make_comment">
+                
+                <form action="/swolemates/post/{{post.id}}/add_comment" method="POST">
+                    {% csrf_token %}
+                    <textarea name="content" id="" cols="30" rows="2" placeholder="Add a comment"></textarea>
+                    <input type="submit" value="Comment">
+                </form>
+            </div>
+
+            <!-- ALL COMMENTS -->
+            {% for comment in post.comments.all %}
+                <img src="/media/{{ comment.posted_by.profile_photo }}" alt="{{ comment.posted_by.username }}'s photo" height="30px">
+                <h5>{{comment.posted_by.username}}</h5>
+                <p>{{comment.updated_at}}</p>
+                <p>{{comment.content}}</p>
+
+                <!-- ADD/REMOVE LIKES -->
+                <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
+                <p>{{comment.liked_by.all|length}} Likes</p>
+                {% if user in comment.liked_by.all %}
+                    <form action="/swolemates/post/{{post.id}}/comment/{{comment.id}}/remove_like" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Unlike">
+                    </form>
+                {% else %}
+                    <form action="/swolemates/post/{{post.id}}/comment/{{comment.id}}/add_like" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Like">
+                    </form>
+                {% endif %}
+
+                <!-- DELETE COMMENT -->
+
+                {% if comment.posted_by == user or profile == user %}
+                    <form action="/swolemates/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete Comment">
+
+                        <!-- DELEEEEEETEEEEEE -->
+                        <a href="/swolemates/post/{{post.id}}/comment/{{comment.id}}/delete">Delete Check</a>
+
+                    </form>
+                {% endif %}
+            {% endfor %}
+
+    </div>
+</body>
+</html>

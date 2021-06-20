@@ -252,8 +252,6 @@ def home_comment_remove_like(request,comment_id):
 
 
 
-
-
 # PROFILE PAGE
 
 def profile(request, username):
@@ -477,6 +475,134 @@ def profile_remove_friend(request,username):
 
     return redirect(f'/swolemates/user/{user.username}')
 
+
+# POST VIEW/EDIT/UPDATE/DELETE ADD/REMOVE COMMENTS/LIKES
+
+def view_post(request,post_id):
+    post = Post.objects.get(id=post_id)
+
+    context = {
+        "user": User.objects.get(id=request.session["user_id"]),
+        "profile": post.posted_by,
+        "post": post,
+    }
+
+    return render(request, "post_view.html", context)
+
+def edit_post(request,post_id):
+    context = {
+        "post": Post.objects.get(id=post_id),
+        "user": User.objects.get(id=request.session["user_id"])
+    }
+
+    return render(request,"post_edit.html", context)
+
+def update_post(request,post_id):
+    if request.method == "POST":
+        errors = Post.objects.validator(request.POST)
+        print(errors)
+        if len(errors) > 0:
+            for k, v in errors.items():
+                messages.error(request, v)
+
+            print("there were errors")
+            return redirect(f'/swolemates/post/{post_id}/edit')
+        
+        if request.POST['workout'] != "none":
+            workout = Workout.objects.get(id=request.POST['workout'])
+            
+            post = Post.objects.get(id=post_id)
+            post.content = request.POST['content']
+            post.workout = workout
+            post.image = request.FILES.get('image') or post.image
+            post.save()
+
+        else:
+
+            post = Post.objects.get(id=post_id)
+            post.content = request.POST['content']
+            post.image = request.FILES.get('image') or post.image
+            post.save()
+
+    return redirect(f"/swolemates/post/{post_id}")
+
+def delete_post(request,post_id):
+    if request.method == "POST":
+        post = Post.objects.get(id=post_id)
+        user = User.objects.get(id=request.session["user_id"])
+        post.delete()
+
+        return redirect(f"/swolemates/user/{user.username}")
+    
+    return redirect(f"/swolemates/post/{post_id}")
+
+def post_add_like(request,post_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        post = Post.objects.get(id=post_id)
+
+        user.liked_posts.add(post)
+        # post.liked_by.add(user)
+        print(user.liked_posts)
+
+    return redirect(f'/swolemates/post/{post_id}')
+
+def post_remove_like(request,post_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        post = Post.objects.get(id=post_id)
+
+        post.liked_by.remove(user)
+
+    return redirect(f'/swolemates/post/{post_id}')
+
+
+def post_add_comment(request,post_id):
+    if request.method == "POST":
+        errors = Comment.objects.validator(request.POST)
+
+        if len(errors) > 0:
+            for k, v in errors.items():
+                messages.error(request, v)
+            return redirect(f'/swolemates/post/{post_id}')
+
+        user = User.objects.get(id=request.session['user_id'])
+        post = Post.objects.get(id=post_id)
+
+        new_comment = Comment.objects.create(content=request.POST['content'], post=post,posted_by=user)
+
+    return redirect(f'/swolemates/post/{post_id}')
+
+def post_delete_comment(request,post_id,comment_id):
+    if request.method == "POST":
+
+        comment = Comment.objects.get(id=comment_id)
+
+        comment.delete()
+
+    return redirect(f'/swolemates/post/{post_id}')
+
+def post_comment_add_like(request,post_id,comment_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        comment = Comment.objects.get(id=comment_id)
+
+        user.liked_comments.add(comment)
+
+    return redirect(f'/swolemates/post/{post_id}')
+
+def post_comment_remove_like(request,post_id,comment_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=request.session['user_id'])
+        comment = Comment.objects.get(id=comment_id)
+
+        user.liked_comments.remove(comment)
+
+    return redirect(f'/swolemates/post/{post_id}')
 
 # FRIENDS LIST
 

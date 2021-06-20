@@ -5,6 +5,8 @@ import re
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 forbidden_chars = ['@#$%^&*()_+=[{/}\|]?,;:.~`!"']
+banned_usernames = ["swolemate","swolemates","user","users","home","friend","friends","post","posts","request","requests","workout","workouts"]
+banned_words = ["fuck","shit","ass","pussy","cunt","dick","balls","nigger","nigga","fag","faggot"]
 
 # MODEL MANAGERS
 
@@ -36,6 +38,13 @@ class UserManager(models.Manager):
 
         if username_unique_check:
             errors['username'] = "That username is already taken"
+
+        if postData['username'] in banned_usernames:
+            errors['username'] = "Please choose a different username"
+
+        for word in banned_words:
+            if word in postData['username'].lower():
+                errors['username'] = "Really? Don't use those words in your username. Jerk."
 
         if not EMAIL_REGEX.match(postData['email']):
             errors['email'] = "Please enter a valid email address."

@@ -51,6 +51,14 @@
                 {% for post in posts reversed %}
                     <div class="post">
                         
+                        <img src='/media/{{post.posted_by.profile_photo}}' alt = "profile photo" height="30px">
+                        <h3>{{ post.posted_by }}</h3>
+                        <p>{{ post.updated_at }}</p>
+
+                        {% if post.posted_by == user %}
+                            <a href="/swolemates/post/{{post.id}}/edit">Edit Post</a>
+                        {% endif %}
+
                         {% if post.image %}
                             <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
                         {% endif %}
@@ -62,10 +70,7 @@
                                 <p>{{exercise.set_count}}x{{exercise.rep_count}}</p>
                             {% endfor %}
                         {% endif %}
-
-                        <img src='/media/{{user.profile_photo}}' alt = "profile photo" height="30px">
-                        <h3>{{ post.posted_by }}</h3>
-                        <p>{{ post.updated_at }}</p>
+                        
                         <p>{{ post.content }}</p>
                         
                     </div>
@@ -74,12 +79,12 @@
                         <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
                         <p>{{post.liked_by.all|length}} Likes</p>
                         {% if user in post.liked_by.all %}
-                            <form action="swolemates/post/{{post.id}}/remove_like" method="POST">
+                            <form action="swolemates/home/post/{{post.id}}/remove_like" method="POST">
                                 {% csrf_token %}
                                 <input type="submit" value="Unlike">
                             </form>
                         {% else %}
-                            <form action="swolemates/post/{{post.id}}/add_like" method="POST">
+                            <form action="swolemates/home/post/{{post.id}}/add_like" method="POST">
                                 {% csrf_token %}
                                 <input type="submit" value="Like">
                             </form>
@@ -89,7 +94,7 @@
                     <!-- POST A COMMENT SECTION -->
                     <div class="profile_make_comment">
                         
-                        <form action="swolemates/post/{{post.id}}/add_comment" method="POST">
+                        <form action="swolemates/home/post/{{post.id}}/add_comment" method="POST">
                             {% csrf_token %}
                             <textarea name="content" id="" cols="30" rows="2" placeholder="Add a comment"></textarea>
                             <input type="submit" value="Comment">
@@ -107,12 +112,12 @@
                         <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
                         <p>{{comment.liked_by.all|length}} Likes</p>
                         {% if user in comment.liked_by.all %}
-                            <form action="swolemates/comment/{{comment.id}}/remove_like" method="POST">
+                            <form action="swolemates/home/comment/{{comment.id}}/remove_like" method="POST">
                                 {% csrf_token %}
                                 <input type="submit" value="Unlike">
                             </form>
                         {% else %}
-                            <form action="swolemates/comment/{{comment.id}}/add_like" method="POST">
+                            <form action="swolemates/home/comment/{{comment.id}}/add_like" method="POST">
                                 {% csrf_token %}
                                 <input type="submit" value="Like">
                             </form>
@@ -120,7 +125,7 @@
     
                         <!-- DELETE COMMENT -->
                         {% if comment.posted_by == user %}
-                            <form action="swolemates/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST">
+                            <form action="swolemates/home/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST">
                                 {% csrf_token %}
                                 <input type="submit" value="Delete Comment">
                             </form>

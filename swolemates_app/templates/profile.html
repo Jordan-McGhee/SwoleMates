@@ -74,6 +74,14 @@
         <div id="post_wrapper">
             {% for post in posts reversed %}
                 <div class="post">
+
+                    <img src='/media/{{profile.profile_photo}}' alt = "profile photo" height="30px">
+                    <h3>{{ post.posted_by }}</h3>
+                    <p>{{ post.updated_at }}</p>
+
+                    {% if post.posted_by == user %}
+                        <a href="/swolemates/post/{{post.id}}/edit">Edit Post</a>
+                    {% endif %}
                     
                     {% if post.image %}
                         <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
@@ -87,9 +95,6 @@
                         {% endfor %}
                     {% endif %}
 
-                    <img src='/media/{{profile.profile_photo}}' alt = "profile photo" height="30px">
-                    <h3>{{ post.posted_by }}</h3>
-                    <p>{{ post.updated_at }}</p>
                     <p>{{ post.content }}</p>
                     
                 </div>

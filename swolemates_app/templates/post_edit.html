@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Post</title>
+</head>
+<body>
+    <!-- POST - DELETE LATER--> <a href="/swolemates/post/{{post.id}}">POST</a>
+    <h2>Edit Post</h2>
+
+    <form action="update" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- WORKOUT SELECTION -->
+        <select name="workout" id="">
+            
+            <!-- IF WORKOUT WASN'T SELECTED WITH POST -->
+            {% if not post.workout %}
+                <option value="none" selected>Add A Workout?</option>
+            {% endif %}
+            
+            {% for workout in user.workouts.all %}
+                <!-- IF WORKOUT WAS SELECTED WITH POST -->
+                {% if workout == post.workout %}
+                    <option value="{{workout.id}}" selected>{{workout.name}}</option>
+                {% else %}
+                    <option value="{{workout.id}}">{{workout.name}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+
+        <!-- IMAGE SELECTION -->
+        {% if post.image %}
+            <p>Current Image:</p>
+            <img src="/media/{{post.image}}" alt="Current Image">
+            <input type="file" name="image" value="Change Image">
+        {% else %}
+            <input type="file" name="image" >
+        {% endif %}
+
+        <!-- POST CONTENT -->
+        <textarea name="content" id="" cols="50" rows="5">{{post.content}}</textarea>
+
+        <input type="submit" value="Update Post">
+        
+        <!-- DELETE POST -->
+        <form action="delete" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Delete Post">
+        </form>
+    </form>
+</body>
+</html>
