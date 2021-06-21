@@ -5,116 +5,342 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{profile.username}}'s Post</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/home_page.css' %}">
 </head>
 <body>
-    <!-- HOME - DELETE LATER--> <a href="/swolemates">HOME</a>
-    <h2>{{profile.username}}'s Post</h2>
 
-    <div id="post_wrapper">
+    <div id="wrapper">
 
-            <div class="post">
-                
-                <!-- POST's IMAGE -->
-                {% if post.image %}
-                    <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
-                {% endif %}
+        <nav class="navbar">
 
-                <!-- POST's WORKOUT -->
-                {% if post.workout %}
-                    <a href="/swolemates/workout/{{post.workout.id}}">{{post.workout.name}}</a>
-                    {% for exercise in post.workout.exercises.all %}
-                        <h5>Exercise: {{exercise.name}}</h5>
-                        <p>{{exercise.set_count}}x{{exercise.rep_count}}</p>
-                    {% endfor %}
-                {% endif %}
+            <!-- LEFT SIDE OF NAVBAR -->
+            <div class="navbar-brand">
+                    <!-- REPLACE THIS WITH LOGO AFTER MAKING -->
+                    <p class="title is-2 is-align-self-center" id="wtf"><a href="/swolemates">SWOLEMATES</a></p>
 
-                <!-- PROFILE PHOTO AND POST INFO -->
-                <img src='/media/{{profile.profile_photo}}' alt = "profile photo" height="30px">
-                <h3><a href="/swolemates/user/{{post.posted_by}}">{{ post.posted_by }}</a></h3>
-                <p>{{ post.updated_at }}</p>
-                <p>{{ post.content }}</p>
+                    <!-- BURGER MENU -->
+                    <a role="button" class="navbar-burger is-align-self-center" id="wtf" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
 
-                <!-- IF USER's POST -->
-                {% if user == profile %}
-                    
-                    {% if post.posted_by == user %}
+            <!-- LEFT SIDE OF NAVBAR END -->
+
+            </div>
+
+            <!-- RIGHT SIDE OF NAVBAR -->
+            <div class="navbar-menu navbar-end">
+
+                <!-- PROFILE -->
+                <a href="/swolemates/user/{{user.username}}" class="navbar-item">
+                    {{user.username}}
+                </a>
+
+                <!-- FRIENDS -->
+                <a href="/swolemates/user/{{user.username}}/friends" class="navbar-item">
+                    Friends
+                </a>
+
+                <!-- WORKOUTS DROPDOWN-->
+                <div class="navbar-item has-dropdown is-hoverable">
+
+                    <!-- WORKOUTS MAIN LINK -->
+                    <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-link">
+                        Workouts
+                    </a>
+
+                    <!-- WORKOUTS DROPDOWN ITEMS -->
+                    <div class="navbar-dropdown">
+
+                        <!-- YOUR WORKOUTS -->
+                        <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-item">
+                            Your Workouts
+                        </a>
                         
-                        <!-- EDIT POST -->
-                        <a href="/swolemates/post/{{post.id}}/edit">Edit Post</a>
+                        <hr class="navbar-divider">
 
-                        <!-- DELETE POST -->
-                        <form action="/swolemates/post/{{post.id}}/delete" method="POST">
-                            {% csrf_token %}
-                            <input type="submit" value="Delete Post">
-                        </form>
+                        <!-- CREATE A WORKOUT -->
+                        <a href="/swolemates/workout" class="navbar-item">
+                            Create A Workout
+                        </a>
 
-                    {% endif %}
+                        <!-- END WORKOUT DROPDOWN MENU -->
+                    </div>
+                    <!-- END WORKOUT ITEM -->
+                </div>
 
-                {% endif %}
+                <!-- LOGOUT -->
+                <div class="navbar-item">
+                    <form action="/logout" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="LOGOUT" class="button" id="logout">
+                    </form>
+                </div>
+
+            
+            <!-- END RIGHT SIDE OF NAV -->
             </div>
 
-            <!-- ADD/REMOVE LIKES -->
+        </nav>
+
+    
+    <!-- ANCESTOR TILE FOR WHOLE PAGE -->
+    <div class="tile is-ancestor is-align-items-flex-start">
+
+        <!-- PARENT TILE FOR POST & COMMENTS -->
+        <div class="tile is-parent is-vertical is-9">
+
+            <!-- CHILD TILE FOR POST -->
+            <div class="tile is-child is-vertical">
+
                 
-                <p>{{post.liked_by.all|length}} Likes</p>
-                {% if user in post.liked_by.all %}
-                    <form action="/swolemates/post/{{post.id}}/remove_like" method="POST">
-                        {% csrf_token %}
-                        <input type="submit" value="Unlike">
-                    </form>
-                {% else %}
-                    <form action="/swolemates/post/{{post.id}}/add_like" method="POST">
-                        {% csrf_token %}
-                        <input type="submit" value="Like">
-                    </form>
-                {% endif %}
+                <div class="post">
+                    <!-- TILE FOR WHOLE INDIVIDUAL POST -->
+                    <div class="tile is-12">
+
+                        <!-- TILE TO FEATURE IMAGE & WORKOUT -->
+
+                            <!-- IMAGE TILE -->
+                            {% if post.image %}
+                                <div class="tile is-4">
+                                    <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
+                                </div>
+                            {% endif %}
 
 
-            <!-- POST A COMMENT SECTION -->
-            <div class="profile_make_comment">
-                
-                <form action="/swolemates/post/{{post.id}}/add_comment" method="POST">
-                    {% csrf_token %}
-                    <textarea name="content" id="" cols="30" rows="2" placeholder="Add a comment"></textarea>
-                    <input type="submit" value="Comment">
-                </form>
+                            <!-- CARD FOR POST TILE -->
+                            <div class="tile" id="test">
+                                <div class="card">
+                                    
+                                    {% if post.workout %}
+                                    <header class="card-header">
+                                        <p class="card-header-title">
+                                            <a href="/swolemates/workout/{{post.workout.id}}">Today's Workout: {{post.workout.name}}</a>
+                                        </p>
+                                    </header>
+                                    {% endif %}
+
+                                    <div class="card-content">
+                                        <div class="media">
+                                            <div class="media-left">
+                                                <figure class="image is-48x48">
+                                                <img src="/media/{{post.posted_by.profile_photo}}" alt="profile photo">
+                                                </figure>
+                                            </div>
+                                            <div class="media-content">
+                                                <p class="title is-4"><a href="/swolemates/user/{{post.posted_by.username}}">{{post.posted_by}}</a></p>
+                                                <p class="subtitle is-6">{{post.updated_at|date:"M d,Y H:m "}} {% if post.posted_by == user %}|  <a href="/swolemates/post/{{post.id}}/edit">Edit Post</a> {% endif %}</p> 
+                                            </div>
+                                        </div>
+
+                                        <div class="content">
+                                            <p>{{post.content}}</p>
+                                        </div>
+                                    </div>
+
+                                    <footer class="card-footer">
+                                        <p class="card-footer-item">{{post.liked_by.all|length}} Likes</p>
+
+                                        {% if user in post.liked_by.all %}
+                                            <div class="card-footer-item">
+                                                <form action="/swolemates/post/{{post.id}}/remove_like" method="POST" >
+                                                    {% csrf_token %}
+                                                    <input type="submit" value="Unlike">
+                                                </form>
+                                            </div>
+                                        {% else %}
+                                            <div class="card-footer-item">
+                                                <form action="/swolemates/post/{{post.id}}/add_like" method="POST" class="card-footer-item">
+                                                    {% csrf_token %}
+                                                    <input type="submit" value="Like">
+                                                </form>
+                                            </div>
+                                        {% endif %}
+
+                                    </footer>
+
+                                </div>
+
+                            <!-- END OF POST CONTENT CARD/TILE -->
+                            </div>
+
+                            
+
+
+                    
+                        <!-- END TILE FOR INDIVIDUAL POST -->
+                    </div>
+                    
+                    <!-- POST COMMENT TILE -->
+                    <div class="tile is-12">
+
+                        <div class="box">
+
+                            <div class="media">
+
+                                <form action="/swolemates/post/{{post.id}}/add_comment" method="POST">
+                                    {% csrf_token %}
+                                
+
+                                <div class="media-content">
+                                    <textarea class="textarea" name="content" id="home-text-area" cols="300" rows="2" placeholder="Post A Comment"></textarea>
+                                </div>
+
+                                <div class="media">
+                                    <input type="submit" value="Comment">
+                                </div>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+                    
+                    <!-- END POST COMMENT TILE -->
+                    </div>
+
+                    <!-- ALL COMMENTS TILE -->
+                    <div class="tile is-12 is-vertical">
+
+                        
+
+                            {% for comment in post.comments.all %}
+                            <div class="tile">
+                                <div class="box" id="comment">
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <figure class="image is-48x48">
+                                            <img src="/media/{{comment.posted_by.profile_photo}}" alt="profile photo">
+                                            </figure>
+                                        </div>
+                                        <div class="media-content">
+                                            <p class="title is-6">{{comment.posted_by}}</p>
+                                            <p class="subtitle is-6" id="comment-time">{{comment.updated_at|date:"M d, Y H:m "}}</p>
+                                            <p class="subtitle is-6" id="comment-content">{{comment.content}}</p>
+                                        </div>
+                                        <div class="media-right is-align-content-center">
+                                            <!-- DELETE COMMENT -->
+                                            {% if comment.posted_by == user %}
+                                                <form action="/swolemates/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST" class="is-align-items-center">
+                                                    {% csrf_token %}
+                                                    <input type="submit" value="Delete Comment">
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                        
+                    
+                        <!-- END ALL COMMENTS TILE -->
+                        </div>
+
+
+                <!-- END POST DIV -->
+                </div>
+
+
+            <!-- END CHILD TILE FOR POST -->
             </div>
+        
+        <!-- END PARENT TILE FOR POSTS & COMMENTS -->
+        </div>
 
-            <!-- ALL COMMENTS -->
-            {% for comment in post.comments.all %}
-                <img src="/media/{{ comment.posted_by.profile_photo }}" alt="{{ comment.posted_by.username }}'s photo" height="30px">
-                <h5>{{comment.posted_by.username}}</h5>
-                <p>{{comment.updated_at}}</p>
-                <p>{{comment.content}}</p>
+        <!-- PARENT TILE FOR LIKED_BY USERS -->
+        <div class="tile is-parent is-vertical is-align-items-flex-start">
 
-                <!-- ADD/REMOVE LIKES -->
-                <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
-                <p>{{comment.liked_by.all|length}} Likes</p>
-                {% if user in comment.liked_by.all %}
-                    <form action="/swolemates/post/{{post.id}}/comment/{{comment.id}}/remove_like" method="POST">
-                        {% csrf_token %}
-                        <input type="submit" value="Unlike">
-                    </form>
-                {% else %}
-                    <form action="/swolemates/post/{{post.id}}/comment/{{comment.id}}/add_like" method="POST">
-                        {% csrf_token %}
-                        <input type="submit" value="Like">
-                    </form>
-                {% endif %}
+            <!-- CHILD TILE FOR LIKED_BY USERS CARD -->
 
-                <!-- DELETE COMMENT -->
+                <div class="tile is-child is-12">
 
-                {% if comment.posted_by == user or profile == user %}
-                    <form action="/swolemates/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST">
-                        {% csrf_token %}
-                        <input type="submit" value="Delete Comment">
+                    <div class="card">
+                        <header class="card-header">
+                        <p class="card-header-title">
+                            Users That Liked This Post
+                        </p>
+                        <button class="card-header-icon" aria-label="more options">
+                            <span class="icon">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                        </header>
+                    
+                    <!-- END TILE TITLE CONTAINER -->
+                    </div>
+                
+                <!-- END CHILD TILE FOR LIKED_BY USERS CARD -->
+                </div>
 
-                        <!-- DELEEEEEETEEEEEE -->
-                        <a href="/swolemates/post/{{post.id}}/comment/{{comment.id}}/delete">Delete Check</a>
+                {% for person in post.liked_by.all %}
+                    <div class="tile is-child is-12">
+                        
+                        <!-- CARD WITH FRIEND INFO -->
+                        <div class="card">
+                                        
+                            <!-- CONTAINER FOR CARD CONTENT -->
+                            <div class="card-content">
+                                
+                                <!-- CONTAINER FOR IMAGE AND FRIEND INFO -->
+                                <div class="media">
 
-                    </form>
-                {% endif %}
-            {% endfor %}
+                                    <!-- CONTAINER FOR PROFILE PICTURE -->
+                                    <div class="media-left">
 
+
+                                        <img src="/media/{{person.profile_photo}}" alt="{{friend.username}}'s profile pic" class="image is-48x48">
+
+                                    </div>
+
+                                    <!-- CONTAINER FOR FRIEND INFO -->
+                                    <div class="media-content">
+
+                                        <p class="title is-6"><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></p>
+                                        <p class="subtitle is-6">{{ person.first_name }} {{ person.last_name }}</p>
+
+                                    </div>
+                                
+                                <!-- END MEDIA CONTAINER -->
+                                </div>
+                            
+                            <!-- END CONTAINER FOR CARD CONTENT -->
+                            </div>
+                        
+                        <!-- END CARD WITH FRIEND INFO -->
+                        </div>
+
+                    <!-- END CHILD TILE FOR USER IN LIKED BY -->
+                    </div>
+
+                {% endfor %}
+
+        <!-- END PARENT TILE FOR LIKED_BY USERS -->
+        </div>
+
+
+    
+    <!-- END ANCESTOR TILE -->
+        </div>
+
+
+
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <!-- END WRAPPER DIV -->
     </div>
 </body>
 </html>

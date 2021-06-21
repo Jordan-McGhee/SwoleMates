@@ -63,6 +63,16 @@ nav {
 }
 
 #profile-left {
-    outline: 1px solid black;
+    border: 1px solid rgb(0, 0, 0, .15);
     padding: 20px;
+}
+
+#comment-time {
+    font-weight: lighter;
+    color: rgb(0, 0, 0, .85);
+    margin-bottom: 8px;
+}
+
+#comment-content {
+    margin-top: 0px;
 }
