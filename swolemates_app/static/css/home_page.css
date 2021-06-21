@@ -7,7 +7,7 @@
 }
 
 #wrapper {
-    width: 90%;
+    width: 95%;
     margin: auto;
 }
 
@@ -15,8 +15,16 @@
     margin: auto;
 }
 
+#wtf {
+    /* border: 1px solid red; */
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
 nav {
-    margin-bottom: 20px;
+    margin: 20px auto;
+    padding: 10px;
+    outline: 1px solid black;
 }
 
 #home-text-area {
@@ -53,12 +61,8 @@ nav {
 #comment {
     background-color: #f5f5f5;
 }
-/* .navbar, .navbar-menu, .navbar-item, .navbar-dropdown {
-    background-color: black;
-    color: white;
-} */
 
-
-/* .card-footer-item {
-    padding-bottom: 0px;
-} */
+#profile-left {
+    outline: 1px solid black;
+    padding: 20px;
+}

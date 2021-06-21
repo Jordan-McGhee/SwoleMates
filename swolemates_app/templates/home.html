@@ -16,13 +16,11 @@
 
             <!-- LEFT SIDE OF NAVBAR -->
             <div class="navbar-brand">
-                <a href="/swolemates" class="navbar-item"></a>
-                    
                     <!-- REPLACE THIS WITH LOGO AFTER MAKING -->
-                    <p class="title is-2"><a href="/swolemates">SWOLEMATES</a></p>
+                    <p class="title is-2 is-align-self-center" id="wtf"><a href="/swolemates">SWOLEMATES</a></p>
 
                     <!-- BURGER MENU -->
-                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <a role="button" class="navbar-burger is-align-self-center" id="wtf" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
@@ -206,7 +204,7 @@
                                                         </div>
                                                         <div class="media-content">
                                                             <p class="title is-4"><a href="/swolemates/user/{{post.posted_by.username}}">{{post.posted_by}}</a></p>
-                                                            <p class="subtitle is-6">{{post.updated_at|date:"M d,Y H:m "}}</p>
+                                                            <p class="subtitle is-6">{{post.updated_at|date:"M d,Y H:m "}} {% if post.posted_by == user %}|  <a href="/swolemates/post/{{post.id}}/edit">Edit Post</a>{% endif %}</p> 
                                                         </div>
                                                     </div>
 
@@ -324,8 +322,6 @@
                     <!-- END TO TILE FOR ALL POSRS -->
                     </div>
 
-
-
                     <!-- END TO PARENT TILE -->
                 </div>
 
@@ -393,15 +389,15 @@
                                             <div class="card-footer">
                                                     
                                                 <!-- ACCEPT REQUEST -->
-                                                <form action="/swolemates/request/{{ person.username }}/accept_request" method="POST" class="card-footer-item">
+                                                <form action="/swolemates/request/{{ friend.username }}/accept_request" method="POST" class="card-footer-item">
                                                     {% csrf_token %}
-                                                    <input type="submit" value="Accept Friend Request">
+                                                    <input type="submit" value="Accept">
                                                 </form>
                                                 
                                                 <!-- DENY REQUEST -->
-                                                <form action="/swolemates/request/{{ person.username }}/deny_request" method="POST" class="card-footer-item">
+                                                <form action="/swolemates/request/{{ friend.username }}/deny_request" method="POST" class="card-footer-item">
                                                     {% csrf_token %}
-                                                    <input type="submit" value="Deny Friend Request">
+                                                    <input type="submit" value="Deny">
                                                 </form>
                                             
                                             <!-- END FOOTER CONTAINER -->
@@ -650,7 +646,7 @@
                                             <div class="media-left">
 
 
-                                                <img src="/media/{{user.profile_photo}}" alt="{{friend.username}}'s profile pic" class="image is-48x48">
+                                                <img src="/media/{{user.profile_photo}}" alt="{{user.username}}'s profile pic" class="image is-48x48">
 
                                             </div>
 

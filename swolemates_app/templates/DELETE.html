@@ -1,3 +1,4 @@
+<!-- HOME PAGE SHIT -->
 
         <!-- POST A COMMENT SECTION -->
         <div class="profile_make_comment">
@@ -46,4 +47,380 @@
 
 
 
+<!-- PROFILE PAGE SHIT -->
 
+<div id="profile_left">
+
+    <img src='/media/{{profile.profile_photo}}' alt = "profile photo" height="300px">
+    <h1>{{profile.username}}</h1>
+    <h3>{{profile.first_name}} {{profile.last_name}}</h3>
+    {% if profile != user and profile not in user_friends and profile not in user_friend_requests and profile not in user_sent_requests %}
+        <form action="/swolemates/user/request/{{ profile.username }}/send_request" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Send Friend Request">
+        </form>
+    {% elif profile != user %}
+        
+        <!-- REMOVE FRIEND -->
+        <form action="/swolemates/user/request/{{ profile.username }}/remove_friend" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Remove Friend">
+        </form>
+
+    {% else %}
+        <a href="/swolemates/user/{{user.username}}/edit">Edit Profile</a>
+
+    {% endif %}
+
+    {% if profile.bio %}
+        <p>BIO:</p>
+        <p>{{profile.bio}}</p>
+    {% else %}
+        <p>NO BIO</p>
+    {% endif %}
+
+    {% if profile.fav_exercises %}
+        <p>FAVORITE EXERCISE</p>
+        <p>{{profile.fav_exercises}}</p>
+    {% else %}
+        <p>NO FAV EXERCISES</p>
+    {% endif %}
+</div>
+
+<div id="profile_main">
+    {% if user == profile %}
+        <div id="make_post">
+            <form action="{{user.username}}/profile_post_create" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- ADD WORKOUT TO POST -->
+                {% if profile_workouts %}
+                    <select name="workout" id="">
+                        <option value="none" selected>Add A Workout?</option>
+                        {% for workout in profile_workouts %}
+                            <option value="{{workout.id}}">{{workout.name}}</option>
+                        {% endfor %}
+                    </select>
+                {% endif %}
+
+                <input type="file" name="image">
+                <textarea name="content" id="" cols="50" rows="5" placeholder="Post Something"></textarea>
+                <input type="submit" value="POST">
+            </form>
+        </div>
+    {% endif %}
+
+    <div id="post_wrapper">
+        {% for post in posts reversed %}
+            <div class="post">
+
+                <img src='/media/{{profile.profile_photo}}' alt = "profile photo" height="30px">
+                <h3>{{ post.posted_by }}</h3>
+                <p>{{ post.updated_at }}</p>
+
+                {% if post.posted_by == user %}
+                    <a href="/swolemates/post/{{post.id}}/edit">Edit Post</a>
+                {% endif %}
+                
+                {% if post.image %}
+                    <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
+                {% endif %}
+
+                {% if post.workout %}
+                    <a href="/swolemates/workout/{{post.workout.id}}">{{post.workout.name}}</a>
+                    {% for exercise in post.workout.exercises.all %}
+                        <h5>Exercise: {{exercise.name}}</h5>
+                        <p>{{exercise.set_count}}x{{exercise.rep_count}}</p>
+                    {% endfor %}
+                {% endif %}
+
+                <p>{{ post.content }}</p>
+                
+            </div>
+
+            <!-- ADD/REMOVE LIKES -->
+                <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
+                <p>{{post.liked_by.all|length}} Likes</p>
+                {% if user in post.liked_by.all %}
+                    <form action="{{post.posted_by}}/post/{{post.id}}/remove_like" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Unlike">
+                    </form>
+                {% else %}
+                    <form action="{{post.posted_by}}/post/{{post.id}}/add_like" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Like">
+                    </form>
+                {% endif %}
+
+
+            <!-- POST A COMMENT SECTION -->
+            <div class="profile_make_comment">
+                
+                <form action="{{post.posted_by}}/post/{{post.id}}/add_comment" method="POST">
+                    {% csrf_token %}
+                    <textarea name="content" id="" cols="30" rows="2" placeholder="Add a comment"></textarea>
+                    <input type="submit" value="Comment">
+                </form>
+            </div>
+
+            <!-- ALL COMMENTS -->
+            {% for comment in post.comments.all %}
+                <img src="/media/{{ comment.posted_by.profile_photo }}" alt="{{ comment.posted_by.username }}'s photo" height="30px">
+                <h5>{{comment.posted_by.username}}</h5>
+                <p>{{comment.updated_at}}</p>
+                <p>{{comment.content}}</p>
+
+                <!-- ADD/REMOVE LIKES -->
+                <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
+                <p>{{comment.liked_by.all|length}} Likes</p>
+                {% if user in comment.liked_by.all %}
+                    <form action="{{post.posted_by}}/comment/{{comment.id}}/remove_like" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Unlike">
+                    </form>
+                {% else %}
+                    <form action="{{post.posted_by}}/comment/{{comment.id}}/add_like" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Like">
+                    </form>
+                {% endif %}
+
+                <!-- DELETE COMMENT -->
+                {% if comment.posted_by == user or profile == user %}
+                    <form action="{{post.posted_by}}/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete Comment">
+                    </form>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+
+<div id="profile_right">
+    <div id="profile_friends_list">
+
+        <!-- IF PROFILE HAS FRIENDS -->
+        {% if profile_friends %}
+
+            <!-- IF THIS IS THE USER'S PROFILE -->
+            {% if user == profile %}
+                <h2><a href="/swolemates/user/{{user.username}}/friends">Your Friends</a></h2>
+
+                <!-- ITERATES THROUGH USER'S FRIENDS -->
+                {% for friend in profile_friends %}
+                    <div class="profile_friend_tile">
+                        <img src="/media/{{friend.profile_photo}}" alt="{{friend.username}} profile pic" height="50px">
+                        <div class="tile_text">
+                            <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
+                            <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+                            
+                            <!-- REMOVE FRIEND -->
+                            <form action="/swolemates/user/request/{{ friend.username }}/remove_friend" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" value="Remove Friend">
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                <!-- USER ADD FRIENDS SECTION -->
+
+                    <!-- IF USER HAS PENDING FRIEND REQUESTS -->
+                    {% if user_friend_requests %}
+                        <h2>Friend Requests</h2>
+                        {% for person in user_friend_requests %}
+                            <div class="profile_friend_tile">
+                                <img src="/media/images/{{person.profile_photo}}" alt="{{person.username}} profile pic" height="50px">
+                                <div class="tile_text">
+                                    <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
+                                    <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                    
+                                    <!-- ACCEPT REQUEST -->
+                                    <form action="/swolemates/user/request/{{ person.username }}/accept_request" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Accept Friend Request">
+                                    </form>
+                                    
+                                    <!-- DENY REQUEST -->
+                                    <form action="/swolemates/user/request/{{ person.username }}/deny_request" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Deny Friend Request">
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <h2>Add Friends</h2>
+                    <!-- ALL OTHERS THAT ARE NOT FRIENDS/PENDING FRIENDS WITH USER -->
+                    {% for person in all_others %}
+                        {% if person not in profile_friends and person not in user_friend_requests and person not in user_sent_requests %}
+                            <div class="profile_friend_tile">
+                                <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic" height="50px">
+                                <div class="tile_text">
+                                    <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
+                                    <p>{{ person.first_name }} {{ person.last_name }}</p>
+
+                                    <!-- SEND REQUEST -->
+                                    <form action="/swolemates/user/request/{{ person.username }}/send_request" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Send Friend Request">
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+            {% else %}
+
+                <!-- NOT USER'S PROFILE -->
+                <h2><a href="/swolemates/user/{{profile.username}}/friends">{{profile.username}}'s Friends</a></h2>
+
+
+                {% for friend in profile_friends %}
+                
+                    <div class="profile_friend_tile">
+                        <img src="/media/{{friend.profile_photo}}" alt="{{friend.username}} profile pic" height="50px">
+                        <div class="tile_text">
+                            <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
+                            <p>{{ friend.first_name }} {{ friend.last_name }}</p>
+
+                            <!-- IF PROFILE'S FRIEND NOT IN USER'S FRIENDS/PENDING FRIENDS -->
+                            {% if friend not in user_friends and friend not in user_friend_requests and friend not in user_sent_requests and friend != user %}
+
+                                <!-- SEND REQUEST -->
+                                <form action="swolemates/user/request/{{ person.username }}/send_request" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Send Friend Request">
+                                </form>
+                            
+                            {% elif friend != user %}
+
+                                <!-- REMOVE FRIEND -->
+                                <form action="/swolemates/user/request/{{ friend.username }}/remove_friend" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Remove Friend">
+                                </form>
+                            
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+
+            {% endif %}
+
+        {% else %}
+            
+            <!-- IF USER DOESN'T HAVE FRIENDS YET -->
+            {% if user == profile %}
+
+                <!-- IF USER HAS PENDING FRIEND REQUESTS -->
+                {% if user_friend_requests %}
+                    <h2>Friend Requests</h2>
+                        {% for person in user_friend_requests %}
+                            
+                                <div class="profile_friend_tile">
+                                    <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic" height="50px">
+                                    <div class="tile_text">
+                                        <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
+                                        <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                        
+                                        <!-- ACCEPT REQUEST -->
+                                        <form action="/swolemates/user/request/{{ person.username }}/accept_request" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" value="Accept Friend Request">
+                                        </form>
+                                        
+                                        <!-- DENY REQUEST -->
+                                        <form action="/swolemates/user/request/{{ person.username }}/deny_request" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" value="Deny Friend Request">
+                                        </form>
+                                    </div>
+                                </div>
+                            
+                        {% endfor %}
+                {% endif %}
+                    <h2>Add Friends</h2>
+                        {% for person in all_others %}
+                            {% if person not in user_sent_requests and person not in user_friend_requests %}
+                                <div class="profile_friend_tile">
+                                    <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic" height="50px">
+                                    <div class="tile_text">
+                                        <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
+                                        <p>{{ person.first_name }} {{ person.last_name }}</p>
+                                        <!-- SEND REQUEST -->
+                                        <form action="/swolemates/user/request/{{ person.username }}/send_request" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" value="Send Friend Request">
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+            {% else %}
+                            
+                <!-- IF PROFILE DOESN'T HAVE FRIENDS YET -->
+                <h2>{{profile.username}}'s Friends</h2>
+                <p>This user has no friends yet. :/</p>
+            {% endif %}
+
+        {% endif %}
+    </div>
+
+    <div id="profile_workouts">
+
+        <!-- IF USER'S PROFILE -->
+        {% if user == profile %}
+
+            <!-- IF USER HAS CREATED WORKOUTS -->
+            {% if profile_workouts %}
+                <h2><a href="/swolemates/user/{{profile.username}}/workouts">Your Workouts</a></h2>
+
+                <!-- ITERATES OVER USER WORKOUTS -->
+                {% for workout in profile_workouts %}
+                    <div class="workout_tile">
+                        <img src="/media/{{profile.profile_photo}}" alt="profile pic" height="50px">
+                        <div class="tile_text">
+                            <h3><a href="/swolemates/workout/{{workout.id}}">{{ workout.name }}</a></h3>
+                            <p>Created By: {{profile.username}} on {{workout.created_at}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>You haven't created any workouts.</p>
+            {% endif %}
+            <h3><a href="/swolemates/workout">Create a Workout</a></h3>
+
+        {% else %}
+
+            <!-- NOT USER'S PROFILE -->
+            <h2><a href="/swolemates/user/{{profile.username}}/workouts">{{profile.username}}'s Workouts</a></h2>
+            
+            {% if profile_workouts %}
+
+                <!-- ITERATES OVER PROFILE'S WORKOUTS -->
+                {% for workout in profile_workouts %}
+                    <div class="workout_tile">
+                        <img src="/media/{{profile.profile_photo}}" alt="profile pic">
+                        <div class="tile_text">
+                            <h3><a href="/swolemates/workout/{{workout.id}}">{{ workout.name }}</a></h3>
+                            <p>Created By: {{profile.username}} on {{workout.created_at}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>{{profile.username}} hasn't created any workouts yet.</p>
+            {% endif %}
+
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+<!-- ADD TO LINE 144/732 PROFILE IF IT BREAKS -->
+<div class="tile is-vertical"></div>
