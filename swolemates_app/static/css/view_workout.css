@@ -45,6 +45,11 @@ nav {
 
 
 #featured-in {
-    height: 100vh;
+    max-height: 600px;
+    overflow: scroll;
+}
+
+#parent-workout-view {
+    max-height: 600px;
     overflow: scroll;
 }

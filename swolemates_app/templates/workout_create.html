@@ -4,371 +4,229 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Workout</title>
+    <title>SM | Create Workout</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/profile_edit.css' %}">
 </head>
 <body>
-    <h1>Create a Workout</h1>
-    <form action="workout/create" method="POST">
-        {% csrf_token %}
-        
-        <div id="workout_name">
-            <label for="name">Name</label>
-            <input type="text" name="workout_name">
+    
+    <div id="wrapper">
+
+        <nav class="navbar">
+
+            <!-- LEFT SIDE OF NAVBAR -->
+            <div class="navbar-brand">
+                    <!-- REPLACE THIS WITH LOGO AFTER MAKING -->
+                    <p class="title is-2 is-align-self-center" id="wtf"><a href="/swolemates">SWOLEMATES</a></p>
+
+                    <!-- BURGER MENU -->
+                    <a role="button" class="navbar-burger is-align-self-center" id="wtf" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+
+            <!-- LEFT SIDE OF NAVBAR END -->
+
+            </div>
+
+            <!-- RIGHT SIDE OF NAVBAR -->
+            <div class="navbar-menu navbar-end">
+
+                <!-- PROFILE -->
+                <a href="/swolemates/user/{{user.username}}" class="navbar-item">
+                    {{user.username}}
+                </a>
+
+                <!-- FRIENDS -->
+                <a href="/swolemates/user/{{user.username}}/friends" class="navbar-item">
+                    Friends
+                </a>
+
+                <!-- WORKOUTS DROPDOWN-->
+                <div class="navbar-item has-dropdown is-hoverable">
+
+                    <!-- WORKOUTS MAIN LINK -->
+                    <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-link">
+                        Workouts
+                    </a>
+
+                    <!-- WORKOUTS DROPDOWN ITEMS -->
+                    <div class="navbar-dropdown">
+
+                        <!-- YOUR WORKOUTS -->
+                        <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-item">
+                            Your Workouts
+                        </a>
+                        
+                        <hr class="navbar-divider">
+
+                        <!-- CREATE A WORKOUT -->
+                        <a href="/swolemates/workout" class="navbar-item">
+                            Create A Workout
+                        </a>
+
+                        <!-- END WORKOUT DROPDOWN MENU -->
+                    </div>
+                    <!-- END WORKOUT ITEM -->
+                </div>
+
+                <!-- LOGOUT -->
+                <div class="navbar-item">
+                    <form action="/logout" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="LOGOUT" class="button" id="logout">
+                    </form>
+                </div>
+
+            
+            <!-- END RIGHT SIDE OF NAV -->
+            </div>
+
+        </nav>
+
+        <!-- ANCESTOR TILE -->
+        <div class="tile">
+            
+
+            <!-- PARENT TILE FOR WORKOUT CREATE FORM -->
+            <div class="tile is-parent is-8">
+
+                <div class="tile is-child is-12 card" id="create-workout-form">
+                    <form action="workout/create" method="POST">
+                        {% csrf_token %}
+
+
+                        <div class="field">
+                            <label for="workout_name" class="label title is-4">Workout Name</label>
+                            <input type="text" name="workout_name" class="input">
+                        </div>
+
+                        {% for i in range %}
+
+                        <label for="name{{ forloop.counter }}" class="label">Exercise {{forloop.counter}}</label>
+
+                        <div class="field is-grouped is-align-content-center">
+                            
+                            <input type="text" name="name{{ forloop.counter }}" class="input">
+
+
+                            <label for="sets{{ forloop.counter }}" class="label" id="space-word">Sets</label>
+                            <select name="sets{{ forloop.counter }}" class="select" id="space">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+
+                            <label for="reps{{ forloop.counter }}" id="space-word" class="label">Reps</label>
+                            <select name="reps{{ forloop.counter }}" class="select" id="space">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                            </select>
+
+                        </div>
+
+                        {% endfor %}
+
+
+
+
+                        <input type="submit" value="CREATE WORKOUT" class="button">
+                    </form>
+                </div>
+
+            <!-- END PARENT TILE -->
+            </div>
+
+            <!-- PARENT TILE FOR OTHER USER WORKOUTS -->
+            <div class="tile is-parent is-vertical">
+
+                <!-- CHILD TILE FOR HEADER CARD -->
+                <div class="tile is-child is-12">
+                    <!-- CARD TITLE -->
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title"><a href="/swolemates/user/{{user.username}}/workouts">Your Other Workouts</a></p>
+                        </header>
+    
+                        <!-- END CARD TITLE DIV -->
+                        </div>
+                <!-- END CHILD TILE FOR HEADER CARD -->
+                </div>
+
+                {% for workout in user.workouts.all %}
+                    <!-- CHILD TILE FOR OTHER WORKOUTS CARD -->
+                    <div class="tile is-child is-12">
+                        
+                        <!-- CARD DIV -->
+                        <div class="card">
+
+                            <header class="card-header">
+                                
+                                <div class="media is-align-items-center">
+
+                                    <!-- CONTAINER FOR PROFILE PICTURE -->
+                                    <div class="media-left">
+
+
+                                        <img src="/media/{{workout.created_by.profile_photo}}" alt="{{workout.created_by}}'s profile pic" class="image is-64x64">
+
+                                    </div>
+
+                                    <!-- CONTAINER FOR FRIEND INFO -->
+                                    <div class="media-content">
+
+                                        <p class="title is-3">{{workout.name}}</p>
+                                        <p class="subtitle is-4">Last Updated: {{workout.updated_at|date:"M d, Y"}}</p>
+
+                                    </div>
+
+                                
+                                <!-- END MEDIA CONTAINER -->
+                                </div>
+
+                            </header>
+                        </div>
+
+                    <!-- END CHILD TILE FOR OTHER WORKOUTS CARD -->
+                    </div>
+                {% endfor %}
+
+            <!-- END PARENT TILE FOR OTHER USER WORKOUTS -->
+            </div>
+
+
+
+
+
+        <!-- END ANCESTOR TILE -->
         </div>
 
-        <div class="exercise_field">
-            <div class="exercise_name">
-                <label for="name1">Exercise 1</label>
-                <input type="text" name="name1">
-            </div>
-            <div class="sets_reps">
-                <div class="sets">
-                    <label for="sets1">Sets</label>
-                    <select name="sets1">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div class="reps">
-                    <label for="reps1">Reps</label>
-                    <select name="reps1">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                    </select>
-                </div>
-            </div>
-        </div>
+    <!-- END WRAPPER DIV -->
+    </div>
 
-        <div class="exercise_field">
-            <div class="exercise_name">
-                <label for="name2">Exercise 2</label>
-                <input type="text" name="name2">
-            </div>
-            <div class="sets_reps">
-                <div class="sets">
-                    <label for="sets2">Sets</label>
-                    <select name="sets2">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div class="reps">
-                    <label for="reps2">Reps</label>
-                    <select name="reps2">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                    </select>
-                </div>
-            </div>
-        </div>
 
-        <div class="exercise_field">
-            <div class="exercise_name">
-                <label for="name3">Exercise 3</label>
-                <input type="text" name="name3">
-            </div>
-            <div class="sets_reps">
-                <div class="sets">
-                    <label for="sets3">Sets</label>
-                    <select name="sets3">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div class="reps">
-                    <label for="reps3">Reps</label>
-                    <select name="reps3">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                    </select>
-                </div>
-            </div>
-        </div>
 
-        <div class="exercise_field">
-            <div class="exercise_name">
-                <label for="name4">Exercise 4</label>
-                <input type="text" name="name4">
-            </div>
-            <div class="sets_reps">
-                <div class="sets">
-                    <label for="sets4">Sets</label>
-                    <select name="sets4">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div class="reps">
-                    <label for="reps4">Reps</label>
-                    <select name="reps4">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="exercise_field">
-            <div class="exercise_name">
-                <label for="name5">Exercise 5</label>
-                <input type="text" name="name5">
-            </div>
-            <div class="sets_reps">
-                <div class="sets">
-                    <label for="sets5">Sets</label>
-                    <select name="sets5">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div class="reps">
-                    <label for="reps5">Reps</label>
-                    <select name="reps5">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="exercise_field">
-            <div class="exercise_name">
-                <label for="name6">Exercise 6</label>
-                <input type="text" name="name6">
-            </div>
-            <div class="sets_reps">
-                <div class="sets">
-                    <label for="sets6">Sets</label>
-                    <select name="sets6">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div class="reps">
-                    <label for="reps6">Reps</label>
-                    <select name="reps6">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="exercise_field">
-            <div class="exercise_name">
-                <label for="name7">Exercise 7</label>
-                <input type="text" name="name7">
-            </div>
-            <div class="sets_reps">
-                <div class="sets">
-                    <label for="sets7">Sets</label>
-                    <select name="sets7">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div class="reps">
-                    <label for="reps7">Reps</label>
-                    <select name="reps7">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="exercise_field">
-            <div class="exercise_name">
-                <label for="name8">Exercise 8</label>
-                <input type="text" name="name8">
-            </div>
-            <div class="sets_reps">
-                <div class="sets">
-                    <label for="sets8">Sets</label>
-                    <select name="sets8">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div class="reps">
-                    <label for="reps8">Reps</label>
-                    <select name="reps8">
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <input type="submit" value="Create Workout">
-    </form>
 </body>
 </html>

@@ -91,7 +91,7 @@
         <div class="tile is-ancestor">
             
             <!-- PARENT TILE FOR WORKOUT -->
-            <div class="tile is-parent is-7 is-vertical is-align-items-flex-start">
+            <div class="tile is-parent is-7 is-vertical is-align-items-flex-start" id="parent-workout-view">
 
                 <!-- CHILD TILE FOR WORKOUT CARD -->
                 <div class="tile is-child is-12">
@@ -223,7 +223,7 @@
             <!-- PARENT TILE FOR FEATURED IN POSTS -->
             <div class="tile is-parent is-vertical is-align-items-flex-start" id="featured-in">
 
-                {% if workout.posts %}
+                {% if workout.posts.all %}
                     <!-- CHILD TILE FOR FEATURED IN POSTS -->
                     <div class="tile is-child is-12">
                         <div class="card">
@@ -277,7 +277,44 @@
                         </div>
 
                     {% endfor %}
+                
 
+                {% else %}
+
+                <!-- CHILD TILE FOR FEATURED IN POSTS -->
+                <div class="tile is-child is-12">
+                    <div class="card">
+                        <header class="card-header">
+                        <p class="card-header-title">
+                            Posts Featured In
+                        </p>
+                        <button class="card-header-icon" aria-label="more options">
+                            <span class="icon">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                        </header>
+                    </div>
+                <!-- END CHILD TILE FOR FEATURED IN POSTS -->
+                </div>
+
+                <!-- CHILD TILE FOR FEATURED IN POSTS -->
+                <div class="tile is-child is-12">
+                    <div class="card">
+                        <header class="card-header">
+                        <p class="card-header-title">
+                            None yet! Make a new post and feature this workout!
+                        </p>
+                        <button class="card-header-icon" aria-label="more options">
+                            <span class="icon">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                        </header>
+                    </div>
+                <!-- END CHILD TILE FOR FEATURED IN POSTS -->
+                </div>
+                
                 {% endif %}
             <!-- END PARENT TILE FOR OTHER PROFILE WORKOUTS -->
             </div>

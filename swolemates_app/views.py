@@ -710,7 +710,11 @@ def workouts_list(request, username):
 # WORKOUT PAGES
 
 def workout_form(request):
-    return render(request, "workout_create.html")
+    context={
+        "user": User.objects.get(id=request.session['user_id']),
+        "range": range(10)
+    }
+    return render(request, "workout_create.html", context)
 
 def workout_create(request):
     if request.method == "POST":
