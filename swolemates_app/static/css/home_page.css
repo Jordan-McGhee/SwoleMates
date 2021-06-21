@@ -76,3 +76,9 @@ nav {
 #comment-content {
     margin-top: 0px;
 }
+
+#upload-image input{
+    margin: auto;
+    width: 58%;
+    /* outline: 1px solid red; */
+}

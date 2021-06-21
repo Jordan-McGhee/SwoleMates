@@ -1,0 +1,32 @@
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css";
+
+* {
+    margin: 0px;
+    padding: 0px;
+    /* outline: 1px solid red; */
+}
+
+#wrapper {
+    width: 95%;
+    margin: auto;
+}
+
+.is-ancestor {
+    margin: auto;
+}
+
+#wtf {
+    /* border: 1px solid red; */
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+nav {
+    margin: 20px auto;
+    padding: 10px;
+    outline: 1px solid black;
+}
+
+#vertical {
+    border-right: 1px solid rgb(0, 0, 0, .15);
+}

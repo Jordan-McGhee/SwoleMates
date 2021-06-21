@@ -4,23 +4,191 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile</title>
+    <title>SM | Edit Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/profile_edit.css' %}">
 </head>
 <body>
-    <h1>Edit Profile</h1>
 
-    <form action="update" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <label for="profile_photo" method="POST" enctype="multipart/form-data">Change Profile Photo</label>
-        <input type="file" name="profile_photo">
-        
-        <label for="bio">Update Bio</label>
-        <textarea name="bio" id="" cols="15" rows="5">{{user.bio}}</textarea>
+    <div id="wrapper">
 
-        <label for="fav_exercises">Change Favorite Exercises</label>
-        <textarea name="fav_exercises" id="" cols="15" rows="5">{{user.fav_exercises}}</textarea>
+        <nav class="navbar">
+
+            <!-- LEFT SIDE OF NAVBAR -->
+            <div class="navbar-brand">
+                    <!-- REPLACE THIS WITH LOGO AFTER MAKING -->
+                    <p class="title is-2 is-align-self-center" id="wtf"><a href="/swolemates">SWOLEMATES</a></p>
+
+                    <!-- BURGER MENU -->
+                    <a role="button" class="navbar-burger is-align-self-center" id="wtf" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+
+            <!-- LEFT SIDE OF NAVBAR END -->
+
+            </div>
+
+            <!-- RIGHT SIDE OF NAVBAR -->
+            <div class="navbar-menu navbar-end">
+
+                <!-- PROFILE -->
+                <a href="/swolemates/user/{{user.username}}" class="navbar-item">
+                    {{user.username}}
+                </a>
+
+                <!-- FRIENDS -->
+                <a href="/swolemates/user/{{user.username}}/friends" class="navbar-item">
+                    Friends
+                </a>
+
+                <!-- WORKOUTS DROPDOWN-->
+                <div class="navbar-item has-dropdown is-hoverable">
+
+                    <!-- WORKOUTS MAIN LINK -->
+                    <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-link">
+                        Workouts
+                    </a>
+
+                    <!-- WORKOUTS DROPDOWN ITEMS -->
+                    <div class="navbar-dropdown">
+
+                        <!-- YOUR WORKOUTS -->
+                        <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-item">
+                            Your Workouts
+                        </a>
+                        
+                        <hr class="navbar-divider">
+
+                        <!-- CREATE A WORKOUT -->
+                        <a href="/swolemates/workout" class="navbar-item">
+                            Create A Workout
+                        </a>
+
+                        <!-- END WORKOUT DROPDOWN MENU -->
+                    </div>
+                    <!-- END WORKOUT ITEM -->
+                </div>
+
+                <!-- LOGOUT -->
+                <div class="navbar-item">
+                    <form action="/logout" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="LOGOUT" class="button" id="logout">
+                    </form>
+                </div>
+
+            
+            <!-- END RIGHT SIDE OF NAV -->
+            </div>
+
+        </nav>
+
+        <!-- ANCESTOR TILE FOR WHOLE PAGE -->
+        <div class="tile is-ancestor">
         
-        <input type="submit" value="UPDATE">
-    </form>
+
+
+        <!-- PARENT TILE FOR EDIT FORM -->
+        <div class="tile is-parent is-6 is-vertical" id="vertical">
+            
+            <!-- EDIT PROFILE CARD -->
+            <div class="tile is-child is-12">
+
+                <!-- CARD TITLE -->
+                <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">Edit Profile</p>
+                </header>
+
+                <!-- END CARD TITLE DIV -->
+                </div>
+            
+            <!-- END CHILD TILE FOR EDIT PROFILE CARD -->
+            </div>
+
+            <!-- CHILD TILE FOR FORM -->
+            <div class="tile is-child">
+
+                <form action="update" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="field">
+                        <label for="profile_photo" class="label title is-4">Change Profile Photo</label>
+                        <input type="file" name="profile_photo" class="file">
+                    </div>
+
+                    <div class="field">
+                        <label for="bio" class="label title is-4">Bio</label>
+                        <textarea name="bio" id="" class="textarea" rows="2">{{user.bio}}</textarea>
+                    </div>
+
+                    <div class="field">
+                        <label for="fav_exercises" class="label title is-4">Favorite Exercises</label>
+                        <textarea name="fav_exercises" id="" class="textarea" rows="2">{{user.fav_exercises}}</textarea>
+                    </div>
+
+                    <input type="submit" value="UPDATE" class="button">
+                </form>
+            </div>
+
+
+
+        <!-- END OF PARENT TILE FOR EDIT FORM -->
+        </div>
+        
+        
+        <!-- PARENT TILE FOR WHAT PROFILE CURRENTLY LOOKS LIKE -->
+            <div class="tile is-parent is-vertical">
+
+                <!-- EDIT PROFILE CARD -->
+                <div class="tile is-child is-12">
+
+                    <!-- CARD TITLE -->
+                    <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">Your Profile Currently</p>
+                    </header>
+
+                    <!-- END CARD TITLE DIV -->
+                    </div>
+                
+                <!-- END CHILD TILE FOR EDIT PROFILE CARD -->
+                </div>
+
+                <div class="tile is-child" id="profile-right">
+                    <img src='/media/{{user.profile_photo}}' alt = "profile photo">
+                    <p class="title is-2">{{user.username}}</p>
+                    <p class="subtitle is-5 is-spaced">{{user.first_name}} {{user.last_name}}</p>
+
+
+                {% if user.bio %}
+                    <p class="title is-6">BIO: <span class="subtitle is-6">{{user.bio}}</span></p>
+                    
+                {% else %}
+                    <p>NO BIO</p>
+                {% endif %}
+
+                {% if user.fav_exercises %}
+                    <p class="title is-6">FAVORITE EXERCISES: <span class="subtitle is-6">{{user.fav_exercises}}</span></p>
+                {% else %}
+                    <p>NO FAV EXERCISES</p>
+                {% endif %}
+
+                <!-- END CHILD TILE -->
+                </div>
+            
+
+            <!-- END PARENT TILE FOR RIGHT SIDE -->
+            </div>
+        
+
+        <!-- END ANCESTOR TILE -->
+        </div>
+
+    <!-- END WRAPPER DIV -->
+    </div>
 </body>
 </html>
