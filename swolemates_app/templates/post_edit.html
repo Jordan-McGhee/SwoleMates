@@ -154,15 +154,13 @@
                                 <textarea name="content" id="" class="textarea" rows="2">{{post.content}}</textarea>
                             </div>
 
-                            <div class="field is-grouped">
-                                <input type="submit" value="Update Post" class="button"> 
-            
-                                <!-- DELETE POST -->
-                                <form action="delete" method="POST">
-                                    {% csrf_token %}
-                                    <input type="submit" value="Delete Post" class="button is-danger">
-                                </form>
-                            </div>
+                            <input type="submit" value="Update Post" class="button"> 
+
+                        </form>
+                        <!-- DELETE POST -->
+                        <form action="delete" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" value="Delete Post" class="button is-danger">
                         </form>
                     </div>
                 <!-- END CHILD TILE FOR EDIT POST FORM -->

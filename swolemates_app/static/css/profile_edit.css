@@ -62,3 +62,7 @@ nav {
     overflow: scroll;
     padding: 20px;
 }
+
+.is-danger {
+    margin-top: 20px;
+}
