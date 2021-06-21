@@ -4,69 +4,268 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Workout</title>
+    <title>SM | Edit Workout</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/profile_edit.css' %}">
 </head>
 <body>
-    <!-- HOME - DELETE LATER--> <a href="/swolemates">HOME</a>
-    <h1>Edit Workout:</h1>
-    <form action="update" method="POST">
-        {% csrf_token %}
-        
-        <div id="workout_name">
-            <label for="workout_name">Workout Name</label>
-            <input type="text" name="workout_name" value="{{ workout.name }}">
-        </div>
 
-        {% for exercise in exercises %}
-            <div class="exercise_field">
-                <div class="exercise_name">
-                    <label for="name{{ forloop.counter }}">Exercise {{ forloop.counter }}</label>
-                    <input type="text" name="name{{ forloop.counter }}" value="{{ exercise.name }}">
-                </div>
-                <div class="sets_reps">
-                    <div class="sets">
-                        <label for="sets{{ forloop.counter }}">Sets</label>
-                        <select name="sets{{ forloop.counter }}">
-                            <option value="1" selected>1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
+    <div id="wrapper">
+
+        <nav class="navbar">
+
+            <!-- LEFT SIDE OF NAVBAR -->
+            <div class="navbar-brand">
+                    <!-- REPLACE THIS WITH LOGO AFTER MAKING -->
+                    <p class="title is-2 is-align-self-center" id="wtf"><a href="/swolemates">SWOLEMATES</a></p>
+
+                    <!-- BURGER MENU -->
+                    <a role="button" class="navbar-burger is-align-self-center" id="wtf" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+
+            <!-- LEFT SIDE OF NAVBAR END -->
+
+            </div>
+
+            <!-- RIGHT SIDE OF NAVBAR -->
+            <div class="navbar-menu navbar-end">
+
+                <!-- PROFILE -->
+                <a href="/swolemates/user/{{user.username}}" class="navbar-item">
+                    {{user.username}}
+                </a>
+
+                <!-- FRIENDS -->
+                <a href="/swolemates/user/{{user.username}}/friends" class="navbar-item">
+                    Friends
+                </a>
+
+                <!-- WORKOUTS DROPDOWN-->
+                <div class="navbar-item has-dropdown is-hoverable">
+
+                    <!-- WORKOUTS MAIN LINK -->
+                    <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-link">
+                        Workouts
+                    </a>
+
+                    <!-- WORKOUTS DROPDOWN ITEMS -->
+                    <div class="navbar-dropdown">
+
+                        <!-- YOUR WORKOUTS -->
+                        <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-item">
+                            Your Workouts
+                        </a>
+                        
+                        <hr class="navbar-divider">
+
+                        <!-- CREATE A WORKOUT -->
+                        <a href="/swolemates/workout" class="navbar-item">
+                            Create A Workout
+                        </a>
+
+                        <!-- END WORKOUT DROPDOWN MENU -->
                     </div>
-                    <div class="reps">
-                        <label for="reps{{ forloop.counter }}">Reps</label>
-                        <select name="reps{{ forloop.counter }}">
-                            <option value="1" selected>1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                        </select>
-                    </div>
+                    <!-- END WORKOUT ITEM -->
                 </div>
+
+                <!-- LOGOUT -->
+                <div class="navbar-item">
+                    <form action="/logout" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="LOGOUT" class="button" id="logout">
+                    </form>
+                </div>
+
+            
+            <!-- END RIGHT SIDE OF NAV -->
+            </div>
+
+        </nav>
+
+        <!-- ANCESTOR TILE FOR WHOLE PAGE -->
+        <div class="tile is-ancestor">
+            
+            <!-- PARENT TILE FOR EDIT WORKOUT FORM -->
+            <div class="tile is-parent is-6 is-vertical">
+            
+                <!-- EDIT WORKOUT CARD -->
+                <div class="tile is-child is-12">
+
+                    <!-- CARD TITLE -->
+                    <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">Edit Workout</p>
+                    </header>
+
+                    <!-- END CARD TITLE DIV -->
+                    </div>
+                
+                <!-- END CHILD TILE FOR EDIT PROFILE CARD -->
+                </div>
+                
+                <!-- CHILD TILE FOR FORM -->
+                <div class="tile is-child">
+
+                    <form action="update" method="POST">
+                        {% csrf_token %}
+
+                        <div class="field">
+                            <label for="workout_name" class="label title is-4">Workout Name</label>
+                            <input type="text" name="workout_name" value="{{ workout.name }}" class="input">
+                        </div>
+
+                        {% for exercise in exercises %}
+                        <label for="name{{ forloop.counter }}" class="label">Exercise {{forloop.counter}}</label>
+
+                        <div class="field is-grouped is-align-content-center">
+                            
+                            <input type="text" name="name{{ forloop.counter }}" class="input" value="{{exercise.name}}">
+
+
+                            <label for="sets{{ forloop.counter }}" class="label" id="space-word">Sets</label>
+                            <select name="sets{{ forloop.counter }}" class="select" id="space">
+                                <option value="1" {% if exercise.set_count == 1 %}selected {% endif %}>1</option>
+                                <option value="2" {% if exercise.set_count == 2 %}selected {% endif %}>2</option>
+                                <option value="3" {% if exercise.set_count == 3 %}selected {% endif %}>3</option>
+                                <option value="4" {% if exercise.set_count == 4 %}selected {% endif %}>4</option>
+                                <option value="5" {% if exercise.set_count == 5 %}selected {% endif %}>5</option>
+                            </select>
+
+                            <label for="reps{{ forloop.counter }}" id="space-word" class="label">Reps</label>
+                            <select name="reps{{ forloop.counter }}" class="select" id="space">
+                                <option value="1" {% if exercise.rep_count == 1 %}selected {% endif %}>1</option>
+                                <option value="2" {% if exercise.rep_count == 2 %}selected {% endif %}>2</option>
+                                <option value="3" {% if exercise.rep_count == 3 %}selected {% endif %}>3</option>
+                                <option value="4" {% if exercise.rep_count == 4 %}selected {% endif %}>4</option>
+                                <option value="5" {% if exercise.rep_count == 5 %}selected {% endif %}>5</option>
+                                <option value="6" {% if exercise.rep_count == 6 %}selected {% endif %}>6</option>
+                                <option value="7" {% if exercise.rep_count == 7 %}selected {% endif %}>7</option>
+                                <option value="8" {% if exercise.rep_count == 8 %}selected {% endif %}>8</option>
+                                <option value="9" {% if exercise.rep_count == 9 %}selected {% endif %}>9</option>
+                                <option value="10" {% if exercise.rep_count == 10 %}selected {% endif %}>10</option>
+                                <option value="11" {% if exercise.rep_count == 11 %}selected {% endif %}>11</option>
+                                <option value="12" {% if exercise.rep_count == 12 %}selected {% endif %}>12</option>
+                                <option value="13" {% if exercise.rep_count == 13 %}selected {% endif %}>13</option>
+                                <option value="14" {% if exercise.rep_count == 14 %}selected {% endif %}>14</option>
+                                <option value="15" {% if exercise.rep_count == 15 %}selected {% endif %}>15</option>
+                                <option value="16" {% if exercise.rep_count == 16 %}selected {% endif %}>16</option>
+                                <option value="17"{% if exercise.rep_count == 17 %}selected {% endif %}>17</option>
+                                <option value="18" {% if exercise.rep_count == 18 %}selected {% endif %}>18</option>
+                                <option value="19" {% if exercise.rep_count == 19 %}selected {% endif %}>19</option>
+                                <option value="20" {% if exercise.rep_count == 20 %}selected {% endif %}>20</option>
+                            </select>
+
+                        </div>
+
+                        {% endfor %}
+                        
+                        <input type="submit" value="UPDATE WORKOUT" class="button">
+
+                    </form>
+
+
+                <!-- END CHILD TILE FOR FORM -->
+                </div>
+
+
+
+            <!-- END PARENT TILE FOR EDIT WORKOUT FORM -->
             </div>
 
 
-        {% endfor %}
-            <input type="submit" value="Update Workout">
-        </form>
-        <form action="delete" method="POST">
-            {% csrf_token %}
-            <input type="submit" value="Delete Workout">
-        </form>
+            <!-- PARENT TILE FOR WHAT THE WORKOUT CURRENTLY IS -->
+            <div class="tile is-parent is-vertical">
+
+                <!-- WORKOUT CURRENTLY CARD -->
+                <div class="tile is-child is-12">
+
+                    <!-- CARD TITLE -->
+                    <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">Current Workout</p>
+                    </header>
+
+                    <!-- END CARD TITLE DIV -->
+                    </div>
+                
+                <!-- END CHILD TILE FOR CURRENT WORKOUT CARD -->
+                </div>
+
+
+                <!-- CHILD TILE FOR WORKOUT CARD -->
+                <div class="tile is-child is-12">
+
+                    <!-- CARD DIV -->
+                    <div class="card">
+
+                        <header class="card-header">
+                            
+                            <div class="media is-align-items-center">
+
+                                <!-- CONTAINER FOR PROFILE PICTURE -->
+                                <div class="media-left">
+
+
+                                    <img src="/media/{{workout.created_by.profile_photo}}" alt="{{workout.created_by}}'s profile pic" class="image is-96x96">
+
+                                </div>
+
+                                <!-- CONTAINER FOR FRIEND INFO -->
+                                <div class="media-content">
+
+                                    <p class="title is-3">{{workout.name}}</p>
+                                    <p class="subtitle is-4">Last Updated: {{workout.updated_at|date:"M d, Y"}}</p>
+
+                                </div>
+
+                            
+                            <!-- END MEDIA CONTAINER -->
+                            </div>
+
+                        </header>
+
+                        <div class="card-content">
+                    
+                                {% for exercise in workout.exercises.all %}
+                                    <p class="title is-5">
+                                        Exercise {{forloop.counter}}: {{exercise.name}}
+                                    </p>
+                                    <p class="subtitle is-5 is-spaced">Sets: {{exercise.set_count}} | Reps: {{exercise.rep_count}}</p>
+                                {% endfor %}
+
+                        </div>
+
+                        <div class="card-footer is-justify-content-flex-start">
+                            <div class="card-footer-item">
+                                <p class="title is-6">Featured In {{workout.posts.all|length}} Posts</p>
+                            </div>
+                        </div>
+
+
+                    <!-- END CARD DIV -->
+                    </div>
+                
+                <!-- END CHILD TILE FOR WORKOUT CARD -->
+                </div>
+
+
+            
+            <!-- END PARENT TILE FOR WHAT WORKOUT CURRENTLY IS -->
+            </div>
+
+
+
+
+        <!-- END ANCESTOR TILE -->
+        </div>
+
+
+
+    <!-- END WRAPPER DIV -->
+    </div>
+    
+</body>
