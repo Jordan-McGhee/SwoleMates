@@ -1,0 +1,49 @@
+
+        <!-- POST A COMMENT SECTION -->
+        <div class="profile_make_comment">
+            
+            <form action="swolemates/home/post/{{post.id}}/add_comment" method="POST">
+                {% csrf_token %}
+                <textarea name="content" id="" cols="30" rows="2" placeholder="Add a comment"></textarea>
+                <input type="submit" value="Comment">
+            </form>
+        </div>
+
+        <!-- ALL COMMENTS -->
+        {% for comment in post.comments.all %}
+            <img src="/media/{{ comment.posted_by.profile_photo }}" alt="{{ comment.posted_by.username }}'s photo" height="30px">
+            <h5>{{comment.posted_by.username}}</h5>
+            <p>{{comment.updated_at}}</p>
+            <p>{{comment.content}}</p>
+
+            <!-- ADD/REMOVE LIKES -->
+            <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
+            <p>{{comment.liked_by.all|length}} Likes</p>
+            {% if user in comment.liked_by.all %}
+                <form action="swolemates/home/comment/{{comment.id}}/remove_like" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Unlike">
+                </form>
+            {% else %}
+                <form action="swolemates/home/comment/{{comment.id}}/add_like" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Like">
+                </form>
+            {% endif %}
+
+            <!-- DELETE COMMENT -->
+            {% if comment.posted_by == user %}
+                <form action="swolemates/home/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Delete Comment">
+                </form>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</div>
+
+<!-- END POST CONTENT -->
+
+
+
+

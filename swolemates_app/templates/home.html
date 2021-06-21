@@ -5,216 +5,697 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SwoleMates</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/home_page.css' %}">
 </head>
 <body>
     <div id="wrapper">
-        <div id="nav">
-            <div id="nav_left">
-                <h1>LOGO</h1>
-                <h1>SwoleMates</h1>
+
+        <nav class="navbar">
+
+            <!-- LEFT SIDE OF NAVBAR -->
+            <div class="navbar-brand">
+                <a href="/swolemates" class="navbar-item"></a>
+                    
+                    <!-- REPLACE THIS WITH LOGO AFTER MAKING -->
+                    <p class="title is-2"><a href="/swolemates">SWOLEMATES</a></p>
+
+                    <!-- BURGER MENU -->
+                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+
+            <!-- LEFT SIDE OF NAVBAR END -->
+
             </div>
-            <div id="nav_right">
-                <h3><a href="/swolemates/user/{{user.username}}/friends">Friends</a></h3>
-                <h3><a href="/swolemates/user/{{user.username}}/workouts">Workouts</a></h3>
-                <h3> <a href="/swolemates/user/{{user.username}}">{{ user.username }}</a></h3>
-                <form action="logout" method="POST">
-                    {% csrf_token %}
-                    <input type="submit" value="LOGOUT" class="button" id="logout">
-                </form>
+
+            <!-- RIGHT SIDE OF NAVBAR -->
+            <div class="navbar-menu navbar-end">
+
+                <!-- PROFILE -->
+                <a href="/swolemates/user/{{user.username}}" class="navbar-item">
+                    {{user.username}}
+                </a>
+
+                <!-- FRIENDS -->
+                <a href="/swolemates/user/{{user.username}}/friends" class="navbar-item">
+                    Friends
+                </a>
+
+                <!-- WORKOUTS DROPDOWN-->
+                <div class="navbar-item has-dropdown is-hoverable">
+
+                    <!-- WORKOUTS MAIN LINK -->
+                    <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-link">
+                        Workouts
+                    </a>
+
+                    <!-- WORKOUTS DROPDOWN ITEMS -->
+                    <div class="navbar-dropdown">
+
+                        <!-- YOUR WORKOUTS -->
+                        <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-item">
+                            Your Workouts
+                        </a>
+                        
+                        <hr class="navbar-divider">
+
+                        <!-- CREATE A WORKOUT -->
+                        <a href="/swolemates/workout" class="navbar-item">
+                            Create A Workout
+                        </a>
+
+                        <!-- END WORKOUT DROPDOWN MENU -->
+                    </div>
+                    <!-- END WORKOUT ITEM -->
+                </div>
+
+                <!-- LOGOUT -->
+                <div class="navbar-item">
+                    <form action="logout" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="LOGOUT" class="button" id="logout">
+                    </form>
+                </div>
+
+            
+            <!-- END RIGHT SIDE OF NAV -->
             </div>
-        </div>
+
+        </nav>
+
+
 
         <div id="main_content">
 
-            <div id="make_post">
-                <form action="swolemates/home_post_create" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
 
-                    <!-- ADD WORKOUT TO POST -->
-                    {% if user_workouts %}
-                        <select name="workout" id="">
-                            <option value="none" selected>Add A Workout?</option>
-                            {% for workout in user_workouts %}
-                                <option value="{{workout.id}}">{{workout.name}}</option>
-                            {% endfor %}
-                        </select>
-                    {% endif %}
 
-                    <input type="file" name="image">
-                    <textarea name="content" id="" cols="50" rows="5" placeholder="Post Something"></textarea>
-                    <input type="submit" value="POST">
+            <!-- TILES -->
 
-                </form>
-            </div>
+            <!-- ANCESTOR DIV -->
+            <div class="tile is-ancestor">
 
-            <div id="post_wrapper">
-                {% for post in posts reversed %}
-                    <div class="post">
-                        
-                        <img src='/media/{{post.posted_by.profile_photo}}' alt = "profile photo" height="30px">
-                        <h3>{{ post.posted_by }}</h3>
-                        <p>{{ post.updated_at }}</p>
+                <!-- TILE FOR POSTS WILL BE VERTICAL & TAKE UP 75% OF PAGE -->
+                <div class="tile is-parent is-9 is-vertical">
 
-                        {% if post.posted_by == user %}
-                            <a href="/swolemates/post/{{post.id}}/edit">Edit Post</a>
-                        {% endif %}
+                    <!-- MAKE POST TILE -->
+                    <div class="tile is-child is-12">
 
-                        {% if post.image %}
-                            <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
-                        {% endif %}
-
-                        {% if post.workout %}
-                            <a href="/swolemates/workout/{{post.workout.id}}">{{post.workout.name}}</a>
-                            {% for exercise in post.workout.exercises.all %}
-                                <h5>Exercise: {{exercise.name}}</h5>
-                                <p>{{exercise.set_count}}x{{exercise.rep_count}}</p>
-                            {% endfor %}
-                        {% endif %}
-                        
-                        <p>{{ post.content }}</p>
-                        
-                    </div>
-    
-                    <!-- ADD/REMOVE LIKES -->
-                        <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
-                        <p>{{post.liked_by.all|length}} Likes</p>
-                        {% if user in post.liked_by.all %}
-                            <form action="swolemates/home/post/{{post.id}}/remove_like" method="POST">
+                        <!-- MAKE POST CARD CONTAINER -->
+                        <div class="card">
+                            
+                            <form action="swolemates/home_post_create" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <input type="submit" value="Unlike">
-                            </form>
-                        {% else %}
-                            <form action="swolemates/home/post/{{post.id}}/add_like" method="POST">
-                                {% csrf_token %}
-                                <input type="submit" value="Like">
-                            </form>
-                        {% endif %}
-    
-    
-                    <!-- POST A COMMENT SECTION -->
-                    <div class="profile_make_comment">
-                        
-                        <form action="swolemates/home/post/{{post.id}}/add_comment" method="POST">
-                            {% csrf_token %}
-                            <textarea name="content" id="" cols="30" rows="2" placeholder="Add a comment"></textarea>
-                            <input type="submit" value="Comment">
-                        </form>
-                    </div>
-    
-                    <!-- ALL COMMENTS -->
-                    {% for comment in post.comments.all %}
-                        <img src="/media/{{ comment.posted_by.profile_photo }}" alt="{{ comment.posted_by.username }}'s photo" height="30px">
-                        <h5>{{comment.posted_by.username}}</h5>
-                        <p>{{comment.updated_at}}</p>
-                        <p>{{comment.content}}</p>
-    
-                        <!-- ADD/REMOVE LIKES -->
-                        <!-- <p>Liked By: {{post.liked_by.all}}</p> -->
-                        <p>{{comment.liked_by.all|length}} Likes</p>
-                        {% if user in comment.liked_by.all %}
-                            <form action="swolemates/home/comment/{{comment.id}}/remove_like" method="POST">
-                                {% csrf_token %}
-                                <input type="submit" value="Unlike">
-                            </form>
-                        {% else %}
-                            <form action="swolemates/home/comment/{{comment.id}}/add_like" method="POST">
-                                {% csrf_token %}
-                                <input type="submit" value="Like">
-                            </form>
-                        {% endif %}
-    
-                        <!-- DELETE COMMENT -->
-                        {% if comment.posted_by == user %}
-                            <form action="swolemates/home/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST">
-                                {% csrf_token %}
-                                <input type="submit" value="Delete Comment">
-                            </form>
-                        {% endif %}
-                    {% endfor %}
-                {% endfor %}
-            </div>
 
-            <div id="main_right">
+                            
+                            <!-- MAKE POST HEADER -->
+                            <header class="card-header">
 
-                <div id="main_friends_list">
-                    {% if friends %}
-
-                        <h2><a href="/swolemates/user/{{user.username}}/friends">Friends</a></h2>
-                            {% for friend in friends %}
-                                <div class="profile_friend_tile">
-                                    <img src="/media/{{friend.profile_photo}}" alt="{{friend.username}}'s profile pic">
-                                    <div class="tile_text">
-                                        <h3><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></h3>
-                                        <p>{{ friend.first_name }} {{ friend.last_name }}</p>
-                                        
-                                        <!-- REMOVE FRIEND -->
-                                        <form action="/swolemates/request/{{ friend.username }}/remove_friend" method="POST">
-                                            {% csrf_token %}
-                                            <input type="submit" value="Remove Friend">
-                                        </form>
+                                <div class="media">
+                                    
+                                    <div class="media-content">
+                                        <textarea class="textarea" name="content" id="home-text-area" cols="300" rows="2" placeholder="Post Something"></textarea>
                                     </div>
                                 </div>
-                            {% endfor %}
-                    {% endif %}
-                    {% if user_friend_requests %}
-                        <h2>Friend Requests</h2>
-                        {% for person in user_friend_requests %}
-                            <div class="profile_friend_tile">
-                                <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic">
-                                <div class="tile_text">
-                                    <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
-                                    <p>{{ person.first_name }} {{ person.last_name }}</p>
-                                    
-                                    <!-- ACCEPT REQUEST -->
-                                    <form action="/swolemates/request/{{ person.username }}/accept_request" method="POST">
-                                        {% csrf_token %}
-                                        <input type="submit" value="Accept Friend Request">
-                                    </form>
-                                    
-                                    <!-- DENY REQUEST -->
-                                    <form action="/swolemates/request/{{ person.username }}/deny_request" method="POST">
-                                        {% csrf_token %}
-                                        <input type="submit" value="Deny Friend Request">
-                                    </form>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+                                
 
-                        <h2>Add Friends</h2>
-                            {% for person in all_others %}
-                                {% if person not in friends and person not in user_friend_requests and person not in user_sent_requests %}
-                                    <div class="home_friend_tile">
-                                        <img src="/media/{{person.profile_photo}}" alt="{{person.username}} profile pic">
-                                        <div class="tile_text">
-                                            <h3><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></h3>
-                                            <p>{{ person.first_name }} {{ person.last_name }}</p>
-                                            <form action="/swolemates/request/{{ person.username }}/send_request" method="POST">
-                                                {% csrf_token %}
-                                                <input type="submit" value="Send Friend Request">
-                                            </form>
-                                        </div>
+                            </header>
+
+                            <footer class="card-footer">
+
+                                <!-- ADD WORKOUT TO POST -->
+                                {% if user_workouts %}
+                                    <div class="card-footer-item">
+                                        <select name="workout" id="">
+                                            <option value="none" selected>Add A Workout?</option>
+                                            {% for workout in user_workouts %}
+                                                <option value="{{workout.id}}">{{workout.name}}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                 {% endif %}
-                            {% endfor %}
-                </div>
-
-                <div id="main_workouts">
-                    {% if user_workouts %}
-                        <h2>Your Workouts</h2>
-                        {% for workout in user_workouts %}
-                            <div class="workout_tile">
-                                <img src="/media/{{user.profile_photo}}" alt="profile pic">
-                                <div class="tile_text">
-                                    <h3><a href="/swolemates/workout/{{workout.id}}">{{ workout.name }}</a></h3>
-                                <p>Created By: {{user.username}} on {{user.created_at}}</p>
+                                
+                                <!-- ADD IMAGE TO POST -->
+                                <div class="card-footer-item">
+                                    <input type="file" name="image">
                                 </div>
+
+                                <!-- ADD IMAGE TO POST -->
+                                <div class="card-footer-item">
+                                    <input type="submit" value="POST">
+                                </div>
+                            </footer>
+
+
+                            </form>
+                        <!-- END MAKE POST CARD CONTAINER -->
+                        </div>
+
+                    
+                    <!-- END MAKE POST TILE -->
+                    </div>
+
+
+                    
+
+                    <!-- TILE FOR POSTS -->
+                    <div class="tile is-child is-vertical" id="posts-tile">
+
+
+                    <!-- ITERATE OVER POSTS HERE -->
+
+                        {% for post in posts reversed %}
+                            {% if post.posted_by in friends or post.posted_by == user %}
+
+                            
+                            <div class="post">
+                                <!-- TILE FOR WHOLE INDIVIDUAL POST -->
+                                <div class="tile is-12">
+
+                                    <!-- TILE TO FEATURE IMAGE & WORKOUT -->
+
+                                        <!-- IMAGE TILE -->
+                                        {% if post.image %}
+                                            <div class="tile is-4">
+                                                <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
+                                            </div>
+                                        {% endif %}
+
+
+                                        <!-- CARD FOR POST TILE -->
+                                        <div class="tile" id="test">
+                                            <div class="card">
+                                                
+                                                {% if post.workout %}
+                                                <header class="card-header">
+                                                    <p class="card-header-title">
+                                                        <a href="/swolemates/workout/{{post.workout.id}}">Today's Workout: {{post.workout.name}}</a>
+                                                    </p>
+                                                </header>
+                                                {% endif %}
+
+                                                <div class="card-content">
+                                                    <div class="media">
+                                                        <div class="media-left">
+                                                            <figure class="image is-48x48">
+                                                            <img src="/media/{{post.posted_by.profile_photo}}" alt="profile photo">
+                                                            </figure>
+                                                        </div>
+                                                        <div class="media-content">
+                                                            <p class="title is-4"><a href="/swolemates/user/{{post.posted_by.username}}">{{post.posted_by}}</a></p>
+                                                            <p class="subtitle is-6">{{post.updated_at|date:"M d,Y H:m "}}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="content">
+                                                        <p>{{post.content}}</p>
+                                                    </div>
+                                                </div>
+
+                                                <footer class="card-footer">
+                                                    <p class="card-footer-item">{{post.liked_by.all|length}} Likes</p>
+
+                                                    {% if user in post.liked_by.all %}
+                                                        <div class="card-footer-item">
+                                                            <form action="swolemates/home/post/{{post.id}}/remove_like" method="POST" >
+                                                                {% csrf_token %}
+                                                                <input type="submit" value="Unlike">
+                                                            </form>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="card-footer-item">
+                                                            <form action="swolemates/home/post/{{post.id}}/add_like" method="POST" class="card-footer-item">
+                                                                {% csrf_token %}
+                                                                <input type="submit" value="Like">
+                                                            </form>
+                                                        </div>
+                                                    {% endif %}
+
+                                                </footer>
+
+                                            </div>
+
+                                        <!-- END OF POST CONTENT CARD/TILE -->
+                                        </div>
+
+                                        
+
+
+                                
+                                    <!-- END TILE FOR INDIVIDUAL POST -->
+                                </div>
+                                
+                                <!-- POST COMMENT TILE -->
+                                <div class="tile is-12">
+
+                                    <div class="box">
+
+                                        <div class="media">
+
+                                            <form action="swolemates/home/post/{{post.id}}/add_comment" method="POST">
+                                                {% csrf_token %}
+                                            
+
+                                            <div class="media-content">
+                                                <textarea class="textarea" name="content" id="home-text-area" cols="300" rows="2" placeholder="Post A Comment"></textarea>
+                                            </div>
+
+                                            <div class="media">
+                                                <input type="submit" value="Comment">
+                                            </div>
+
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+                                
+                                <!-- END POST COMMENT TILE -->
+                                </div>
+
+                                <!-- ALL COMMENTS TILE -->
+                                <div class="tile is-12">
+
+                                    
+
+                                        {% for comment in post.comments.all %}
+                                        <div class="box" id="comment">
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <figure class="image is-48x48">
+                                                    <img src="/media/{{comment.posted_by.profile_photo}}" alt="profile photo">
+                                                    </figure>
+                                                </div>
+                                                <div class="media-content">
+                                                    <p class="title is-6">{{comment.posted_by}}</p>
+                                                    <p class="subtitle is-6">{{comment.content}}</p>
+                                                </div>
+                                                <div class="media-right is-align-content-center">
+                                                    <!-- DELETE COMMENT -->
+                                                    {% if comment.posted_by == user %}
+                                                        <form action="swolemates/home/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST" class="is-align-items-center">
+                                                            {% csrf_token %}
+                                                            <input type="submit" value="Delete Comment">
+                                                        </form>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+
+                                    
+                                
+                                <!-- END POST COMMENT TILE -->
+                                </div>
+
+
+
+                            <!-- END POST DIV CONTAINER -->
                             </div>
+
+                            {% endif %}
+
+                        <!-- END ITERATE OVER POSTS -->
                         {% endfor %}
-                    {% endif %}
-                    <h3><a href="/swolemates/workout">Create a Workout</a></h3>
+
+                    <!-- END TO TILE FOR ALL POSRS -->
+                    </div>
+
+
+
+                    <!-- END TO PARENT TILE -->
                 </div>
 
+                <!-- TILE FOR FRIENDS AND WORKOUTS. WILL BE VERTICAL & TAKE UP 25% OF PAGE -->
+                <div class="tile is-vertical">
+
+                    <!-- PARENT TILE FOR FRIEND REQUESTS -->
+                    <div class="tile is-parent is-vertical">
+
+                        <!-- ITERATE OVER REQUESTS HERE -->
+                            {% if user_friend_requests %}
+
+                                <!-- TILE TITLE -->
+                                <div class="tile is-child">
+
+                                    <div class="card">
+                                        <header class="card-header">
+                                        <p class="card-header-title">
+                                            <a href="/swolemates/user/{{user.username}}/friends">Friend Requests</a>
+                                        </p>
+                                        <button class="card-header-icon" aria-label="more options">
+                                            <span class="icon">
+                                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                            </span>
+                                        </button>
+                                        </header>
+                                    </div>
+                                
+                                <!-- END TILE TITLE CONTAINER -->
+                                </div>
+
+
+                                {% for friend in user_friend_requests %}
+                                <div class="tile is-child">
+    
+                                <!-- CARD WITH FRIEND INFO -->
+                                    <div class="card">
+                                        
+                                        <!-- CONTAINER FOR CARD CONTENT -->
+                                        <div class="card-content">
+                                            
+                                            <!-- CONTAINER FOR IMAGE AND FRIEND INFO -->
+                                            <div class="media">
+    
+                                                <!-- CONTAINER FOR PROFILE PICTURE -->
+                                                <div class="media-left">
+    
+    
+                                                    <img src="/media/{{friend.profile_photo}}" alt="{{friend.username}}'s profile pic" class="image is-48x48">
+    
+                                                </div>
+    
+                                                <!-- CONTAINER FOR FRIEND INFO -->
+                                                <div class="media-content">
+    
+                                                    <p class="title is-6"><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></p>
+                                                    <p class="subtitle is-6">{{ friend.first_name }} {{ friend.last_name }}</p>
+    
+                                                </div>
+                                            
+                                            <!-- END MEDIA CONTAINER -->
+                                            </div>
+
+                                            <!-- FOOTER CONTAINER -->
+                                            <div class="card-footer">
+                                                    
+                                                <!-- ACCEPT REQUEST -->
+                                                <form action="/swolemates/request/{{ person.username }}/accept_request" method="POST" class="card-footer-item">
+                                                    {% csrf_token %}
+                                                    <input type="submit" value="Accept Friend Request">
+                                                </form>
+                                                
+                                                <!-- DENY REQUEST -->
+                                                <form action="/swolemates/request/{{ person.username }}/deny_request" method="POST" class="card-footer-item">
+                                                    {% csrf_token %}
+                                                    <input type="submit" value="Deny Friend Request">
+                                                </form>
+                                            
+                                            <!-- END FOOTER CONTAINER -->
+                                            </div>
+    
+                                        <!-- END CARD-CONTENT CONTAINER -->
+                                        </div>
+    
+                                    <!-- END CARD CONTAINER -->
+                                    </div>
+    
+                                <!-- END TILE CONTAINER -->
+                                </div>
+    
+    
+                            <!-- END ITERATE OVER FRIENDS HERE -->
+                            {% endfor %}
+    
+                        {% endif %}
+                        
+                        
+                        <!-- END PARENT TILE FOR FRIENDS -->
+                        </div>
+
+                    <!-- PARENT TILE FOR FRIENDS -->
+                    <div class="tile is-parent is-vertical">
+
+                        {% if friends %}
+
+                            <!-- TILE TITLE -->
+                            <div class="tile is-child">
+
+                                <div class="card">
+                                    <header class="card-header">
+                                    <p class="card-header-title">
+                                        <a href="/swolemates/user/{{user.username}}/friends">Your Friends</a>
+                                    </p>
+                                    <button class="card-header-icon" aria-label="more options">
+                                        <span class="icon">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                    </header>
+                                </div>
+                            
+                            <!-- END TILE TITLE CONTAINER -->
+                            </div>
+                            
+                            <!-- ITERATE OVER FRIENDS HERE -->
+                            {% for friend in friends %}
+                            <div class="tile is-child">
+
+                            <!-- CARD WITH FRIEND INFO -->
+                                <div class="card">
+                                    
+                                    <!-- CONTAINER FOR CARD CONTENT -->
+                                    <div class="card-content">
+                                        
+                                        <!-- CONTAINER FOR IMAGE AND FRIEND INFO -->
+                                        <div class="media">
+
+                                            <!-- CONTAINER FOR PROFILE PICTURE -->
+                                            <div class="media-left">
+
+
+                                                <img src="/media/{{friend.profile_photo}}" alt="{{friend.username}}'s profile pic" class="image is-48x48">
+
+                                            </div>
+
+                                            <!-- CONTAINER FOR FRIEND INFO -->
+                                            <div class="media-content">
+
+                                                <p class="title is-6"><a href="/swolemates/user/{{friend.username}}">{{ friend.username }}</a></p>
+                                                <p class="subtitle is-6">{{ friend.first_name }} {{ friend.last_name }}</p>
+
+                                            </div>
+
+                                        
+                                        <!-- END MEDIA CONTAINER -->
+                                        </div>
+
+                                        <!-- FOOTER CONTAINER -->
+                                        <div class="card-footer">
+                                            
+                                            <!-- REMOVE FRIEND -->
+                                            <form action="/swolemates/request/{{ friend.username }}/remove_friend" method="POST" class="card-footer-item is-justify-content-start is-align-self-center">
+                                                {% csrf_token %}
+                                                <input type="submit" value="Remove Friend">
+                                            </form>
+                                        
+                                        <!-- END FOOTER CONTAINER -->
+                                        </div>
+
+                                    <!-- END CARD-CONTENT CONTAINER -->
+                                    </div>
+
+                                <!-- END CARD CONTAINER -->
+                                </div>
+
+                            <!-- END TILE CONTAINER -->
+                            </div>
+
+
+                            <!-- END ITERATE OVER FRIENDS HERE -->
+                            {% endfor %}
+
+                        {% endif %}
+                    
+                    
+                    <!-- END PARENT TILE FOR FRIENDS -->
+                    </div>
+
+
+                    <!-- PARENT TILE FOR ADD FRIENDS -->
+                    <div class="tile is-parent is-vertical">
+
+                            <!-- TILE TITLE -->
+                            <div class="tile is-child">
+
+                                <div class="card">
+                                    <header class="card-header">
+                                    <p class="card-header-title">
+                                        <a href="/swolemates/user/{{user.username}}/friends">Add Friends</a>
+                                    </p>
+                                    <button class="card-header-icon" aria-label="more options">
+                                        <span class="icon">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                    </header>
+                                </div>
+                            
+                            <!-- END TILE TITLE CONTAINER -->
+                            </div>
+                            
+                            <!-- ITERATE OVER ALL OTHERS HERE -->
+                            {% for person in all_others %}
+
+                                {% if person not in friends and person not in user_friend_requests and person not in user_sent_requests %}
+                                    <div class="tile is-child">
+
+                                    <!-- CARD WITH FRIEND INFO -->
+                                        <div class="card">
+                                            
+                                            <!-- CONTAINER FOR CARD CONTENT -->
+                                            <div class="card-content">
+                                                
+                                                <!-- CONTAINER FOR IMAGE AND FRIEND INFO -->
+                                                <div class="media">
+
+                                                    <!-- CONTAINER FOR PROFILE PICTURE -->
+                                                    <div class="media-left">
+
+
+                                                        <img src="/media/{{person.profile_photo}}" alt="{{friend.username}}'s profile pic" class="image is-48x48">
+
+                                                    </div>
+
+                                                    <!-- CONTAINER FOR FRIEND INFO -->
+                                                    <div class="media-content">
+
+                                                        <p class="title is-6"><a href="/swolemates/user/{{person.username}}">{{ person.username }}</a></p>
+                                                        <p class="subtitle is-6">{{ person.first_name }} {{ person.last_name }}</p>
+
+                                                    </div>
+
+                                                
+                                                <!-- END MEDIA CONTAINER -->
+                                                </div>
+
+                                                <!-- FOOTER CONTAINER -->
+                                                <div class="card-footer">
+                                                    
+                                                    <!-- SEND FRIEND REQUEST -->
+                                                    <form action="/swolemates/request/{{ person.username }}/send_request" method="POST" class="card-footer-item is-justify-content-start">
+                                                        {% csrf_token %}
+                                                        
+                                                        {% if person.username != "NOFRIEND ZONE" %}
+                                                        <input type="submit" value="Send Friend Request">
+
+                                                        {% else %}
+                                                            <a href="">Send Friend Request</a>
+                                                        {% endif %}
+                                                    </form>
+                                                
+                                                <!-- END FOOTER CONTAINER -->
+                                                </div>
+
+                                            <!-- END CARD-CONTENT CONTAINER -->
+                                            </div>
+
+                                        <!-- END CARD CONTAINER -->
+                                        </div>
+
+                                    <!-- END TILE CONTAINER -->
+                                    </div>
+
+                                {% endif %}
+
+                            <!-- END ITERATE OVER FRIENDS HERE -->
+                            {% endfor %}
+                    
+                    
+                    <!-- END PARENT TILE FOR ADD FRIENDS -->
+                    </div>
+
+
+                    <!-- PARENT TILE FOR WORKOUTS -->
+                    <div class="tile is-parent is-vertical">
+
+                        {% if user_workouts %}
+
+                            <!-- TILE TITLE -->
+                            <div class="tile is-child">
+
+                                <div class="card">
+                                    <header class="card-header">
+                                    <p class="card-header-title">
+                                        <a href="/swolemates/user/{{user.username}}/workouts">Your Workouts</a>
+                                    </p>
+                                    <button class="card-header-icon" aria-label="more options">
+                                        <span class="icon">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                    </header>
+                                </div>
+                            
+                            <!-- END TILE TITLE CONTAINER -->
+                            </div>
+                            
+                            <!-- ITERATE OVER WORKOUTS HERE -->
+                            {% for workout in user_workouts %}
+                            <div class="tile is-child">
+
+                            <!-- CARD WITH WORKOUT INFO -->
+                                <div class="card">
+                                    
+                                    <!-- CONTAINER FOR CARD CONTENT -->
+                                    <div class="card-content">
+                                        
+                                        <!-- CONTAINER FOR IMAGE AND WORKOUT INFO -->
+                                        <div class="media">
+
+                                            <!-- CONTAINER FOR WORKOUT DEFAULT PICTURE -->
+                                            <div class="media-left">
+
+
+                                                <img src="/media/{{user.profile_photo}}" alt="{{friend.username}}'s profile pic" class="image is-48x48">
+
+                                            </div>
+
+                                            <!-- CONTAINER FOR WORKOUT INFO -->
+                                            <div class="media-content">
+
+                                                <p class="title is-6"><a href="/swolemates/workout/{{workout.id}}">{{ workout.name }}</a></p>
+                                                <p class="subtitle is-6">Created By: You on {{user.created_at|date:"M d, Y"}}</p>
+
+                                            </div>
+
+                                        
+                                        <!-- END MEDIA CONTAINER -->
+                                        </div>
+
+                                        <!-- FOOTER CONTAINER -->
+                                        <div class="card-footer">
+                                            
+                                            <!-- EDIT WORKOUT -->
+                                            <a href="/swolemates/workout/{{workout.id}}/edit" class="card-footer-item is-justify-content-start">Edit Workout</a>
+                                        
+                                        <!-- END FOOTER CONTAINER -->
+                                        </div>
+
+                                    <!-- END CARD-CONTENT CONTAINER -->
+                                    </div>
+
+                                <!-- END CARD CONTAINER -->
+                                </div>
+
+                            <!-- END TILE CONTAINER -->
+                            </div>
+
+
+                            <!-- END ITERATE OVER WORKOUTS HERE -->
+                            {% endfor %}
+
+                        {% endif %}
+                    
+                    
+                    <!-- END PARENT TILE FOR WORKOUTS -->
+                    </div>
+
+                </div>
+            <!-- END ANCESTOR DIV -->
             </div>
 
         </div>

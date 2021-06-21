@@ -1,0 +1,64 @@
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css";
+
+* {
+    margin: 0px;
+    padding: 0px;
+    /* outline: 1px solid red; */
+}
+
+#wrapper {
+    width: 90%;
+    margin: auto;
+}
+
+.is-ancestor {
+    margin: auto;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+
+#home-text-area {
+    width: 100%;
+}
+
+#posts-tile {
+    /* outline: 1px solid blue; */
+    height: 100vh;
+    overflow: scroll;
+}
+
+/* #test { */
+    /* outline: 1px solid green; */
+/* } */
+
+#test .card {
+    /* outline: 1px solid red; */
+    width: 100%;
+}
+
+.post {
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid rgb(0, 0, 0, .15);
+    border-radius: 10px;
+}
+
+.box {
+    /* outline: 1px solid red; */
+    width: 100%;
+}
+
+#comment {
+    background-color: #f5f5f5;
+}
+/* .navbar, .navbar-menu, .navbar-item, .navbar-dropdown {
+    background-color: black;
+    color: white;
+} */
+
+
+/* .card-footer-item {
+    padding-bottom: 0px;
+} */
