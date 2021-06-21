@@ -1,0 +1,42 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    /* outline: 1px solid red; */
+}
+
+#wrapper {
+    width: 95%;
+    margin: auto;
+}
+
+.is-ancestor {
+    margin: auto;
+}
+
+nav {
+    margin: 20px auto;
+    padding: 10px;
+    outline: 1px solid black;
+}
+
+#wtf {
+    /* border: 1px solid red; */
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+#workout-tile {
+    padding: 10px;
+    /* outline: 1px solid red; */
+    
+}
+
+#workout-tile-exercises {
+    height: 250px;
+    overflow: scroll;
+    /* padding-bottom: 0px; */
+}
+
+#workout-header {
+    padding-bottom: 10px;
+}

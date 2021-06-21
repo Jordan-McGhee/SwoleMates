@@ -642,6 +642,7 @@ def friends_list(request, username):
         "user": user,
         "profile": profile,
         "profile_friends": profile.friends.all(),
+        "user_friends": user.friends.all(),
         "all_others": User.objects.exclude(id=user.id),
         "user_friend_requests": user_received_request_objects,
         # "user_friend_requests_usernames": user_received_request_usernames,
@@ -734,9 +735,11 @@ def workout_create(request):
 
 def workout_view(request, id):
     workout = Workout.objects.get(id=id)
+    profile = User.objects.get(id=workout.created_by.id)
 
     context = {
         "workout": workout,
+        "profile": profile,
         "user": User.objects.get(id=request.session['user_id']),
         "exercises": workout.exercises.all()
     }

@@ -4,26 +4,295 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout {{workout.name}}</title>
+    <title>SM | Workout {{workout.name}}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/view_workout.css' %}">
 </head>
 <body>
-    <!-- HOME - DELETE LATER--> <a href="/swolemates">HOME</a>
-    <h1>{{workout.name}}</h1>
-    <p>Created By: {{workout.created_by}} | {{workout.updated_at}}</p>
+    
+    <div id="wrapper">
 
-    {% for exercise in exercises %}
+        <nav class="navbar">
 
-        <h3>Exercise {{forloop.counter}}: {{exercise.name}}</h3>
-        <p>Sets: {{exercise.set_count}} | Reps: {{exercise.set_count}}</p>
+            <!-- LEFT SIDE OF NAVBAR -->
+            <div class="navbar-brand">
+                    <!-- REPLACE THIS WITH LOGO AFTER MAKING -->
+                    <p class="title is-2 is-align-self-center" id="wtf"><a href="/swolemates">SWOLEMATES</a></p>
 
-    {% endfor %}
+                    <!-- BURGER MENU -->
+                    <a role="button" class="navbar-burger is-align-self-center" id="wtf" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
 
-    {% if user == workout.created_by %}
-    <a href="/swolemates/workout/{{workout.id}}/edit">Edit Workout</a>
-    <form action="{{workout.id}}/delete" method="POST">
-        {% csrf_token %}
-        <input type="submit" value="Delete Workout">
-    </form>
-    {% endif %}
+            <!-- LEFT SIDE OF NAVBAR END -->
+
+            </div>
+
+            <!-- RIGHT SIDE OF NAVBAR -->
+            <div class="navbar-menu navbar-end">
+
+                <!-- PROFILE -->
+                <a href="/swolemates/user/{{user.username}}" class="navbar-item">
+                    {{user.username}}
+                </a>
+
+                <!-- FRIENDS -->
+                <a href="/swolemates/user/{{user.username}}/friends" class="navbar-item">
+                    Friends
+                </a>
+
+                <!-- WORKOUTS DROPDOWN-->
+                <div class="navbar-item has-dropdown is-hoverable">
+
+                    <!-- WORKOUTS MAIN LINK -->
+                    <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-link">
+                        Workouts
+                    </a>
+
+                    <!-- WORKOUTS DROPDOWN ITEMS -->
+                    <div class="navbar-dropdown">
+
+                        <!-- YOUR WORKOUTS -->
+                        <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-item">
+                            Your Workouts
+                        </a>
+                        
+                        <hr class="navbar-divider">
+
+                        <!-- CREATE A WORKOUT -->
+                        <a href="/swolemates/workout" class="navbar-item">
+                            Create A Workout
+                        </a>
+
+                        <!-- END WORKOUT DROPDOWN MENU -->
+                    </div>
+                    <!-- END WORKOUT ITEM -->
+                </div>
+
+                <!-- LOGOUT -->
+                <div class="navbar-item">
+                    <form action="/logout" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="LOGOUT" class="button" id="logout">
+                    </form>
+                </div>
+
+            
+            <!-- END RIGHT SIDE OF NAV -->
+            </div>
+
+        </nav>
+
+        <div id="ancestor-div">
+        <!-- ANCESTOR TILE -->
+        <div class="tile is-ancestor">
+            
+            <!-- PARENT TILE FOR WORKOUT -->
+            <div class="tile is-parent is-7 is-vertical is-align-items-flex-start">
+
+                <!-- CHILD TILE FOR WORKOUT CARD -->
+                <div class="tile is-child is-12">
+
+                    <!-- CARD DIV -->
+                    <div class="card">
+
+                        <header class="card-header">
+                            
+                            <div class="media is-align-items-center">
+
+                                <!-- CONTAINER FOR PROFILE PICTURE -->
+                                <div class="media-left">
+
+
+                                    <img src="/media/{{workout.created_by.profile_photo}}" alt="{{workout.created_by}}'s profile pic" class="image is-96x96">
+
+                                </div>
+
+                                <!-- CONTAINER FOR FRIEND INFO -->
+                                <div class="media-content">
+
+                                    <p class="title is-3">{{workout.name}}</p>
+                                    <p class="subtitle is-4">Created By: {{workout.created_by}}</p>
+
+                                </div>
+
+                            
+                            <!-- END MEDIA CONTAINER -->
+                            </div>
+
+                        </header>
+
+                        <div class="card-content">
+
+                            <p class="title is-1">
+                                Exercises:
+                            </p>
+                    
+                                {% for exercise in workout.exercises.all %}
+                                    <p class="title is-justify-content-space-between">
+                                        {{forloop.counter}}. {{exercise.name}}
+                                    </p>
+                                    <p class="subtitle is-5">Sets: {{exercise.set_count}} | Reps: {{exercise.rep_count}}</p>
+                                {% endfor %}
+
+                        </div>
+
+                        {% if profile == user %}
+                        <div class="card-footer">
+                            
+                            <a href="/swolemates/workout/{{workout.id}}/edit" class="card-footer-item">Edit Workout</a>
+                            <form action="/swolemates/workout/{{workout.id}}/delete" method="POST" class="card-footer-item">
+                                {% csrf_token %}
+                                <input type="submit" value="Delete Workout">
+                            </form>
+
+                        </div>
+                        {% endif %}
+
+                    <!-- END CARD DIV -->
+                    </div>
+                
+                <!-- END CHILD TILE FOR WORKOUT CARD -->
+                </div>
+
+
+                <!-- CHILD TILE FOR PROFILE'S OTHER WORKOUTS CARD-->
+                <div class="tile is-child is-12">
+
+                        <div class="card">
+                            <header class="card-header">
+                            <p class="card-header-title">
+                                <a href="/swolemates/user/{{profile.username}}/workouts">{{profile.username}}'s Other Workouts</a>
+                            </p>
+                            <button class="card-header-icon" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                            </header>
+                        </div>
+                <!-- END CHILD TILE FOR PROFILE'S OTHER WORKOUTS CARD -->
+                </div>
+
+                {% for work in profile.workouts.all %}
+                    {% if work != workout %}
+                        <!-- CHILD TILES FOR OTHER WORKOUTS -->
+                        <div class="tile is-child is-12">
+                            
+                            <div class="card">
+                                <header class="card-header">
+                            
+                                    <div class="media is-align-items-center">
+        
+                                        <!-- CONTAINER FOR PROFILE PICTURE -->
+                                        <div class="media-left">
+        
+        
+                                            <img src="/media/{{work.created_by.profile_photo}}" alt="{{work.created_by}}'s profile pic" class="image is-96x96">
+        
+                                        </div>
+        
+                                        <!-- CONTAINER FOR WORKOUT INFO -->
+                                        <div class="media-content">
+        
+                                            <p class="title is-5"><a href="/swolemates/workout/{{work.id}}">{{work.name}}</a></p>
+                                            <p class="subtitle is-6">Created By: {{work.created_by}}</p>
+        
+                                        </div>
+        
+                                    
+                                    <!-- END MEDIA CONTAINER -->
+                                    </div>
+        
+                                </header>
+                            </div>
+
+                        <!-- END CHILD TILES FOR OTHER WORKOUTS -->
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+            <!-- END PARENT TILE FOR WORKOUT -->
+            </div>
+
+            
+            
+            <!-- PARENT TILE FOR FEATURED IN POSTS -->
+            <div class="tile is-parent is-vertical is-align-items-flex-start" id="featured-in">
+
+                {% if workout.posts %}
+                    <!-- CHILD TILE FOR FEATURED IN POSTS -->
+                    <div class="tile is-child is-12">
+                        <div class="card">
+                            <header class="card-header">
+                            <p class="card-header-title">
+                                Posts Featured In
+                            </p>
+                            <button class="card-header-icon" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                            </header>
+                        </div>
+                    <!-- END CHILD TILE FOR FEATURED IN POSTS -->
+                    </div>
+
+
+                    {% for post in workout.posts.all %}
+
+                        <div class="tile is-child is-12">
+
+                            <div class="card">
+                                <header class="card-header">
+                            
+                                    <div class="media is-align-items-center">
+        
+                                        <!-- CONTAINER FOR PROFILE PICTURE -->
+                                        <div class="media-left">
+        
+        
+                                            <img src="/media/{{post.posted_by.profile_photo}}" alt="{{post.posted_by}}'s profile pic" class="image is-96x96">
+        
+                                        </div>
+        
+                                        <!-- CONTAINER FOR POST INFO -->
+                                        <div class="media-content">
+        
+                                            <p class="title is-5"><a href="/swolemates/post/{{post.id}}">{{post.posted_by}}'s Post</a></p>
+                                            <p class="subtitle is-6">Posted On: {{post.updated_at}}</p>
+        
+                                        </div>
+        
+                                    
+                                    <!-- END MEDIA CONTAINER -->
+                                    </div>
+        
+                                </header>
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+            <!-- END PARENT TILE FOR OTHER PROFILE WORKOUTS -->
+            </div>
+
+
+
+
+
+
+        <!-- END ANCESTOR TILE -->
+        </div>
+        </div>
+
+    <!-- END WRAPPER DIV -->
+    </div>
+
 </body>
 </html>
