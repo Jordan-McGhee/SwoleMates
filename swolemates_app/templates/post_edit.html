@@ -4,52 +4,248 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Post</title>
+    <title>SM | Edit Post</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/profile_edit.css' %}">
 </head>
 <body>
-    <!-- POST - DELETE LATER--> <a href="/swolemates/post/{{post.id}}">POST</a>
-    <h2>Edit Post</h2>
 
-    <form action="update" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+    <div id="wrapper">
 
-        <!-- WORKOUT SELECTION -->
-        <select name="workout" id="">
+
+        <nav class="navbar">
+
+            <!-- LEFT SIDE OF NAVBAR -->
+            <div class="navbar-brand">
+                    <!-- REPLACE THIS WITH LOGO AFTER MAKING -->
+                    <p class="title is-2 is-align-self-center" id="wtf"><a href="/swolemates">SWOLEMATES</a></p>
+
+                    <!-- BURGER MENU -->
+                    <a role="button" class="navbar-burger is-align-self-center" id="wtf" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+
+            <!-- LEFT SIDE OF NAVBAR END -->
+
+            </div>
+
+            <!-- RIGHT SIDE OF NAVBAR -->
+            <div class="navbar-menu navbar-end">
+
+                <!-- PROFILE -->
+                <a href="/swolemates/user/{{user.username}}" class="navbar-item">
+                    {{user.username}}
+                </a>
+
+                <!-- FRIENDS -->
+                <a href="/swolemates/user/{{user.username}}/friends" class="navbar-item">
+                    Friends
+                </a>
+
+                <!-- WORKOUTS DROPDOWN-->
+                <div class="navbar-item has-dropdown is-hoverable">
+
+                    <!-- WORKOUTS MAIN LINK -->
+                    <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-link">
+                        Workouts
+                    </a>
+
+                    <!-- WORKOUTS DROPDOWN ITEMS -->
+                    <div class="navbar-dropdown">
+
+                        <!-- YOUR WORKOUTS -->
+                        <a href="/swolemates/user/{{user.username}}/workouts" class="navbar-item">
+                            Your Workouts
+                        </a>
+                        
+                        <hr class="navbar-divider">
+
+                        <!-- CREATE A WORKOUT -->
+                        <a href="/swolemates/workout" class="navbar-item">
+                            Create A Workout
+                        </a>
+
+                        <!-- END WORKOUT DROPDOWN MENU -->
+                    </div>
+                    <!-- END WORKOUT ITEM -->
+                </div>
+
+                <!-- LOGOUT -->
+                <div class="navbar-item">
+                    <form action="/logout" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="LOGOUT" class="button" id="logout">
+                    </form>
+                </div>
+
             
-            <!-- IF WORKOUT WASN'T SELECTED WITH POST -->
-            {% if not post.workout %}
-                <option value="none" selected>Add A Workout?</option>
-            {% endif %}
+            <!-- END RIGHT SIDE OF NAV -->
+            </div>
+
+        </nav>
+
+
+        <div class="tile is-ancestor">
+
+            <!-- PARENT TILE FOR EDIT POST FORM -->
+            <div class="tile is-parent is-6 is-vertical">
+
+                <!-- CHILD FOR EDIT POST CARD -->
+                <div class="tile is-child is-12">
+                    <!-- CARD TITLE -->
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Edit Post</p>
+                        </header>
+    
+                        <!-- END CARD TITLE DIV -->
+                        </div>
+                <!-- END CHILD FOR EDIT POST -->
+                </div>
+
+                <!-- CHILD TILE FOR EDIT POST -->
+                <div class="tile is-child is-12">
+                    <div class="card" id="edit-post-form">
+                        <form action="update" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <div class="field is-grouped is-justify-content-space-around is-align-items-center" id="edit-post-group">
+                                <div class="field">
+                                    <label for="image" class="label title is-4">Change/Add Image</label>
+                                    <input type="file" name="image" class="file">
+                                </div>
+
+                                <div class="field is-justify-content-center">
+                                    <label for="workout" class="label title is-4">Change/Add Workout</label>
+                                    <!-- WORKOUT SELECTION -->
+                                    <select name="workout" class="select">
+                                        
+                                        <!-- IF WORKOUT WASN'T SELECTED WITH POST -->
+                                        {% if not post.workout %}
+                                            <option value="none" selected>Add A Workout?</option>
+                                        {% endif %}
+                                        
+                                        {% for workout in user.workouts.all %}
+                                            <!-- IF WORKOUT WAS SELECTED WITH POST -->
+                                            {% if workout == post.workout %}
+                                                <option value="{{workout.id}}" selected>{{workout.name}}</option>
+                                            {% else %}
+                                                <option value="{{workout.id}}">{{workout.name}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            {% if post.image %}
+
+                            <p class="title is-5">Current Image:</p>
+                            <img src="/media/{{post.image}}" alt="Current Image" class="image is-4x3">
+
+                            {% endif %}
+
+
+                            <div class="field"  id="edit-post-group">
+                                <label for="content" class="label title is-4">Post Content:</label>
+                                <textarea name="content" id="" class="textarea" rows="2">{{post.content}}</textarea>
+                            </div>
+
+                            <div class="field is-grouped">
+                                <input type="submit" value="Update Post" class="button"> 
             
-            {% for workout in user.workouts.all %}
-                <!-- IF WORKOUT WAS SELECTED WITH POST -->
-                {% if workout == post.workout %}
-                    <option value="{{workout.id}}" selected>{{workout.name}}</option>
-                {% else %}
-                    <option value="{{workout.id}}">{{workout.name}}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
+                                <!-- DELETE POST -->
+                                <form action="delete" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Delete Post" class="button is-danger">
+                                </form>
+                            </div>
+                        </form>
+                    </div>
+                <!-- END CHILD TILE FOR EDIT POST FORM -->
+                </div>
 
-        <!-- IMAGE SELECTION -->
-        {% if post.image %}
-            <p>Current Image:</p>
-            <img src="/media/{{post.image}}" alt="Current Image">
-            <input type="file" name="image" value="Change Image">
-        {% else %}
-            <input type="file" name="image" >
-        {% endif %}
 
-        <!-- POST CONTENT -->
-        <textarea name="content" id="" cols="50" rows="5">{{post.content}}</textarea>
 
-        <input type="submit" value="Update Post">
-        
-        <!-- DELETE POST -->
-        <form action="delete" method="POST">
-            {% csrf_token %}
-            <input type="submit" value="Delete Post">
-        </form>
-    </form>
+            <!-- END PARENT TILE FOR EDIT POST FORM -->
+            </div>
+
+
+            <!-- PARENT TILE FOR RIGHT SIDE -->
+            <div class="tile is-parent is-vertical">
+                <!-- CHILD FOR CURRENT POST CARD -->
+                <div class="tile is-child is-12">
+                    <!-- CARD TITLE -->
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Current Post</p>
+                        </header>
+    
+                        <!-- END CARD TITLE DIV -->
+                        </div>
+                <!-- END CHILD FOR CURRENT POST -->
+                </div>
+
+                <!-- CHILD TILE FOR CURRENT POST -->
+                <div class="tile is-child is-12">
+                    <div class="card">
+                        {% if post.workout %}
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    <a href="/swolemates/workout/{{post.workout.id}}">Today's Workout: {{post.workout.name}}</a>
+                                </p>
+                            </header>
+                        {% endif %}
+
+                        
+
+                        {% if post.image %}
+                        <div class="card-image">
+
+                        <img src="/media/{{post.image}}" alt="Image" class="image is-4x3">
+                        
+                        </div>
+                        {% endif %}
+
+
+                        <div class="card-content">
+
+                            <p>{{post.content}}</p>
+
+                        </div>
+
+                        <footer class="card-footer">
+                            <p class="card-footer-item">{{post.liked_by.all|length}} Likes</p>
+                            <p class="card-footer-item">{{post.comments.all|length}} Comments</p>
+                        </footer>
+
+
+                    </div>
+
+
+                <!-- END CHILD TILE FOR CURRENT POST FORM -->
+                </div>
+
+            <!-- END PARENT TILE FOR RIGHT SIDE -->
+            </div>
+
+
+
+
+
+
+
+        <!-- END ANCESTOR TILE -->
+        </div>
+
+
+
+
+    <!-- END WRAPPER DIV -->
+    </div>
+    
 </body>
 </html>

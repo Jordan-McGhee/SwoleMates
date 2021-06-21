@@ -93,7 +93,7 @@
 
                 <div class="tile is-child" id="profile-left">
                     <img src='/media/{{profile.profile_photo}}' alt = "profile photo">
-                    <p class="title is-2">{{profile.username}}</p>
+                    <p class="title is-3">{{profile.username}}</p>
                     <p class="subtitle is-5">{{profile.first_name}} {{profile.last_name}}</p>
 
                     {% if profile != user and profile not in user_friends and profile not in user_friend_requests and profile not in user_sent_requests %}
@@ -965,7 +965,19 @@
                 <!-- TILE FOR POSTS -->
                 <div class="tile is-child is-vertical" id="posts-tile">
 
-
+                        {% if not posts %}
+                            <!-- CHILD FOR REGISTER CARD -->
+                            <div class="tileis-12">
+                                <!-- CARD TITLE -->
+                                <div class="card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">There's nothing here... Post something!</p>
+                                    </header>
+                                    <!-- END CARD TITLE DIV -->
+                                    </div>
+                            <!-- END CHILD FOR REGISTER -->
+                            </div>
+                        {% endif %}
                     <!-- ITERATE OVER POSTS HERE -->
 
                         {% for post in posts reversed %}

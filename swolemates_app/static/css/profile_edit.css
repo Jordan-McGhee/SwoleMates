@@ -48,3 +48,17 @@ nav {
     max-height: 600px;
     overflow: scroll;
 }
+
+#edit-post-group {
+    margin-top: 20px;
+}
+
+.is-grouped input {
+    margin-right: 20px;
+}
+
+#edit-post-form {
+    max-height: 550px;
+    overflow: scroll;
+    padding: 20px;
+}

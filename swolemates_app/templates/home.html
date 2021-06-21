@@ -162,7 +162,19 @@
                     <!-- TILE FOR POSTS -->
                     <div class="tile is-child is-vertical" id="posts-tile">
 
-
+                            {% if not user.posts.all and not friends %}
+                            <!-- CHILD FOR REGISTER CARD -->
+                            <div class="tileis-12">
+                                <!-- CARD TITLE -->
+                                <div class="card">
+                                    <header class="card-header">
+                                        <p class="card-header-title">There's nothing here... Post something!</p>
+                                    </header>
+                                    <!-- END CARD TITLE DIV -->
+                                    </div>
+                            <!-- END CHILD FOR REGISTER -->
+                            </div>
+                        {% endif %}
                     <!-- ITERATE OVER POSTS HERE -->
 
                         {% for post in posts reversed %}
