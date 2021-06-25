@@ -162,9 +162,14 @@
                         </div>
 
                         {% endfor %}
-                        
-                        <input type="submit" value="UPDATE WORKOUT" class="button">
 
+                        <input type="submit" value="UPDATE WORKOUT" class="button">
+                        
+                    </form>
+
+                    <form action="delete" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete Workout" class="button is-danger" onclick="return confirm('Are you sure you want to delete your workout?');">
                     </form>
 
 

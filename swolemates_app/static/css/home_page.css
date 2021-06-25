@@ -82,3 +82,15 @@ nav {
     width: 58%;
     /* outline: 1px solid red; */
 }
+
+#home-right {
+    max-height: 100vh;
+    overflow: scroll;
+}
+
+#profile-left-height {
+    max-height: 75vh;
+    overflow: scroll;
+    border: 1px solid rgb(0, 0, 0, .15);
+    padding: 20px;
+}

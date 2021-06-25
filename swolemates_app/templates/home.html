@@ -143,7 +143,7 @@
 
                                 <!-- ADD IMAGE TO POST -->
                                 <div class="card-footer-item">
-                                    <input type="submit" value="POST">
+                                    <input type="submit" value="POST" class="button">
                                 </div>
                             </footer>
 
@@ -232,14 +232,14 @@
                                                         <div class="card-footer-item">
                                                             <form action="swolemates/home/post/{{post.id}}/remove_like" method="POST" >
                                                                 {% csrf_token %}
-                                                                <input type="submit" value="Unlike">
+                                                                <input type="submit" value="Unlike" class="button">
                                                             </form>
                                                         </div>
                                                     {% else %}
                                                         <div class="card-footer-item">
                                                             <form action="swolemates/home/post/{{post.id}}/add_like" method="POST" class="card-footer-item">
                                                                 {% csrf_token %}
-                                                                <input type="submit" value="Like">
+                                                                <input type="submit" value="Like" class="button">
                                                             </form>
                                                         </div>
                                                     {% endif %}
@@ -274,7 +274,7 @@
                                             </div>
 
                                             <div class="media">
-                                                <input type="submit" value="Comment">
+                                                <input type="submit" value="Comment" class="button">
                                             </div>
 
                                             </form>
@@ -310,7 +310,7 @@
                                                         {% if comment.posted_by == user %}
                                                             <form action="swolemates/home/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST" class="is-align-items-center">
                                                                 {% csrf_token %}
-                                                                <input type="submit" value="Delete Comment">
+                                                                <input type="submit" value="Delete Comment" class="button">
                                                             </form>
                                                         {% endif %}
                                                     </div>
@@ -341,7 +341,7 @@
                 </div>
 
                 <!-- TILE FOR FRIENDS AND WORKOUTS. WILL BE VERTICAL & TAKE UP 25% OF PAGE -->
-                <div class="tile is-vertical">
+                <div class="tile is-vertical" id="home-right">
 
                     <!-- PARENT TILE FOR FRIEND REQUESTS -->
                     <div class="tile is-parent is-vertical">
@@ -406,13 +406,13 @@
                                                 <!-- ACCEPT REQUEST -->
                                                 <form action="/swolemates/request/{{ friend.username }}/accept_request" method="POST" class="card-footer-item">
                                                     {% csrf_token %}
-                                                    <input type="submit" value="Accept">
+                                                    <input type="submit" value="Accept" class="button">
                                                 </form>
                                                 
                                                 <!-- DENY REQUEST -->
                                                 <form action="/swolemates/request/{{ friend.username }}/deny_request" method="POST" class="card-footer-item">
                                                     {% csrf_token %}
-                                                    <input type="submit" value="Deny">
+                                                    <input type="submit" value="Deny" class="button">
                                                 </form>
                                             
                                             <!-- END FOOTER CONTAINER -->
@@ -463,7 +463,7 @@
                             
                             <!-- ITERATE OVER FRIENDS HERE -->
                             {% for friend in friends %}
-                            <div class="tile is-child">
+                            <div class="tile is-child" id="tile-height">
 
                             <!-- CARD WITH FRIEND INFO -->
                                 <div class="card">
@@ -500,7 +500,7 @@
                                             <!-- REMOVE FRIEND -->
                                             <form action="/swolemates/request/{{ friend.username }}/remove_friend" method="POST" class="card-footer-item is-justify-content-start is-align-self-center">
                                                 {% csrf_token %}
-                                                <input type="submit" value="Remove Friend">
+                                                <input type="submit" value="Remove Friend" class="button">
                                             </form>
                                         
                                         <!-- END FOOTER CONTAINER -->
@@ -591,7 +591,7 @@
                                                         {% csrf_token %}
                                                         
                                                         {% if person.username != "NOFRIEND ZONE" %}
-                                                        <input type="submit" value="Send Friend Request">
+                                                        <input type="submit" value="Send Friend Request" class="button">
 
                                                         {% else %}
                                                             <a href="">Send Friend Request</a>

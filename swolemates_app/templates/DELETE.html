@@ -1252,3 +1252,71 @@
     </form>
 
 </div>
+
+<!-- LOGIN/REG -->
+
+<h1 id="title">SwoleMates</h1>
+        <div id="login_reg">
+
+            <div id="registration">
+
+                <h1>Register</h1>
+
+                <form action="/register" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form_field">
+                        <label for="first_name">First Name</label>
+                        <input type="text" name="first_name">
+                    </div>
+                
+                    <div class="form_field">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" name="last_name">
+                    </div>
+
+                    <div class="form_field">
+                        <label for="username">Username</label>
+                        <input type="text" name="username">
+                    </div>
+
+                    <div class="form_field">
+                        <label for="email">Email</label>
+                        <input type="text" name="email">
+                    </div>
+
+                    <div class="form_field">
+                        <label for="Password">Password</label>
+                        <input type="password" name="password">
+                    </div>
+
+                    <div class="form_field">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" name="confirm_password">
+                    </div>
+
+                    <input type="submit" value="Register" class="button">
+        
+                </form>
+            </div>
+
+            <div id="login">
+                <h1>Login</h1>
+                <form action="/login" method="POST">
+                    {% csrf_token %}
+
+                    <div class="form_field">
+                        <label for="email">Email</label>
+                        <input type="text" name="email">
+                    </div>
+
+                    <div class="form_field">
+                        <label for="password">Password</label>
+                        <input type="password" name="password">
+                    </div>
+                    
+                    <input type="submit" value="Login" class="button">
+
+                </form>
+            </div>
+        </div>

@@ -66,3 +66,7 @@ nav {
 .is-danger {
     margin-top: 20px;
 }
+
+#workout-update-button, #post-update-button {
+    margin-top: 20px;
+}
