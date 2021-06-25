@@ -155,7 +155,7 @@
                                         {% csrf_token %}
                                         
                                         {% if person.username != "NOFRIEND ZONE" %}
-                                        <input type="submit" value="Send Friend Request">
+                                        <input type="submit" value="Send Friend Request" class="button">
 
                                         {% else %}
                                             <a href="">Send Friend Request</a>
@@ -171,7 +171,7 @@
                                     <!-- REMOVE FRIEND -->
                                     <form action="/swolemates/friends/request/{{ friend.username }}/remove_friend" method="POST" class="card-footer-item is-justify-content-start is-align-self-center">
                                         {% csrf_token %}
-                                        <input type="submit" value="Remove Friend">
+                                        <input type="submit" value="Remove Friend" class="button">
                                     </form>
                                 
                                 <!-- END FOOTER CONTAINER -->
@@ -292,13 +292,13 @@
                                     <!-- ACCEPT REQUEST -->
                                     <form action="/swolemates/friends/request/{{ friend.username }}/accept_request" method="POST" class="card-footer-item">
                                         {% csrf_token %}
-                                        <input type="submit" value="Accept">
+                                        <input type="submit" value="Accept" class="button">
                                     </form>
                                     
                                     <!-- DENY REQUEST -->
                                     <form action="/swolemates/friends/request/{{ friend.username }}/deny_request" method="POST" class="card-footer-item">
                                         {% csrf_token %}
-                                        <input type="submit" value="Deny">
+                                        <input type="submit" value="Deny" class="button">
                                     </form>
                                 
                                 <!-- END FOOTER CONTAINER -->
@@ -383,7 +383,7 @@
                                                 {% csrf_token %}
                                                 
                                                 {% if person.username != "NOFRIEND ZONE" %}
-                                                <input type="submit" value="Send Friend Request">
+                                                <input type="submit" value="Send Friend Request" class="button">
 
                                                 {% else %}
                                                     <a href="">Send Friend Request</a>

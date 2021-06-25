@@ -102,6 +102,23 @@
                     <!-- MAKE POST TILE -->
                     <div class="tile is-child is-12">
 
+                        <div id="errors">
+                            {% if messages %}
+
+                                {% for message in messages %}    
+                                    <div class="card messages">
+                                        <header class="card-header">
+                                            <p class="card-header-title" id="error">
+                                                ERROR: {{ message }}
+                                            </p>
+                                        </header>
+                                    </div>
+
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+
                         <!-- MAKE POST CARD CONTAINER -->
                         <div class="card">
                             
@@ -189,7 +206,7 @@
 
                                         <!-- IMAGE TILE -->
                                         {% if post.image %}
-                                            <div class="tile is-4">
+                                            <div class="tile is-3">
                                                 <img src="/media/{{post.image}}" alt="{{post.posted_by}} image">
                                             </div>
                                         {% endif %}

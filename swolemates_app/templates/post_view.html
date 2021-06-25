@@ -148,14 +148,14 @@
                                             <div class="card-footer-item">
                                                 <form action="/swolemates/post/{{post.id}}/remove_like" method="POST" >
                                                     {% csrf_token %}
-                                                    <input type="submit" value="Unlike">
+                                                    <input type="submit" value="Unlike" class="button">
                                                 </form>
                                             </div>
                                         {% else %}
                                             <div class="card-footer-item">
                                                 <form action="/swolemates/post/{{post.id}}/add_like" method="POST" class="card-footer-item">
                                                     {% csrf_token %}
-                                                    <input type="submit" value="Like">
+                                                    <input type="submit" value="Like" class="button">
                                                 </form>
                                             </div>
                                         {% endif %}
@@ -190,7 +190,7 @@
                                 </div>
 
                                 <div class="media">
-                                    <input type="submit" value="Comment">
+                                    <input type="submit" value="Comment" class="button">
                                 </div>
 
                                 </form>
@@ -226,7 +226,7 @@
                                             {% if comment.posted_by == user %}
                                                 <form action="/swolemates/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST" class="is-align-items-center">
                                                     {% csrf_token %}
-                                                    <input type="submit" value="Delete Comment">
+                                                    <input type="submit" value="Delete Comment" class="button">
                                                 </form>
                                             {% endif %}
                                         </div>

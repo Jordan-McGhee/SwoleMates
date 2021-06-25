@@ -82,7 +82,7 @@ class PostCommentManager(models.Manager):
         errors = {}
 
         if len(postData['content']) < 1:
-            errors['content'] = "Message can't be empty"
+            errors['content'] = "Post/Comment can't be empty"
 
         return errors
 
