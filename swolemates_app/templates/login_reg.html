@@ -13,17 +13,6 @@
 <body>
     <div id="wrapper">
 
-        <div id="errors">
-            {% if messages %}
-            <h1 class="messages">ERRORS</h1>
-                <ul class="messages">    
-                {% for message in messages %}    
-                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
-                {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-
         <nav class="navbar">
 
             <!-- LEFT SIDE OF NAVBAR -->
@@ -43,6 +32,28 @@
             </div>
 
         </nav>
+
+        <div id="errors">
+            {% if messages %}
+                <div class="card messages">
+                    <header class="card-header">
+                        <p class="card-header-title">
+                            ERRORS:
+                        </p>
+                    </header>
+
+                    {% for message in messages %}
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                {{message}}
+                            </p>
+                        </header>
+                    {% endfor %}
+
+                </div>
+            {% endif %}
+
+        </div>
 
         <!-- ANCESTOR TILE -->
         <div class="tile is-ancestor is-justify-content-space-between">
