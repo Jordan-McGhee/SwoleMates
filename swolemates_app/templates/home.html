@@ -360,11 +360,10 @@
                 <!-- TILE FOR FRIENDS AND WORKOUTS. WILL BE VERTICAL & TAKE UP 25% OF PAGE -->
                 <div class="tile is-vertical" id="home-right">
 
-                    <!-- PARENT TILE FOR FRIEND REQUESTS -->
-                    <div class="tile is-parent is-vertical">
-
-                        <!-- ITERATE OVER REQUESTS HERE -->
-                            {% if user_friend_requests %}
+                    <!-- ITERATE OVER REQUESTS HERE -->
+                    {% if user_friend_requests %}
+                        <!-- PARENT TILE FOR FRIEND REQUESTS -->
+                        <div class="tile is-parent is-vertical">
 
                                 <!-- TILE TITLE -->
                                 <div class="tile is-child">
@@ -447,17 +446,14 @@
     
                             <!-- END ITERATE OVER FRIENDS HERE -->
                             {% endfor %}
-    
-                        {% endif %}
-                        
                         
                         <!-- END PARENT TILE FOR FRIENDS -->
                         </div>
+                    {% endif %}
 
-                    <!-- PARENT TILE FOR FRIENDS -->
-                    <div class="tile is-parent is-vertical">
-
-                        {% if friends %}
+                    {% if friends %}
+                        <!-- PARENT TILE FOR FRIENDS -->
+                        <div class="tile is-parent is-vertical">
 
                             <!-- TILE TITLE -->
                             <div class="tile is-child">
@@ -535,12 +531,10 @@
 
                             <!-- END ITERATE OVER FRIENDS HERE -->
                             {% endfor %}
-
-                        {% endif %}
                     
-                    
-                    <!-- END PARENT TILE FOR FRIENDS -->
-                    </div>
+                        <!-- END PARENT TILE FOR FRIENDS -->
+                        </div>
+                    {% endif %}
 
 
                     <!-- PARENT TILE FOR ADD FRIENDS -->
@@ -637,10 +631,9 @@
                     </div>
 
 
-                    <!-- PARENT TILE FOR WORKOUTS -->
-                    <div class="tile is-parent is-vertical">
-
-                        {% if user_workouts %}
+                    {% if user_workouts %}
+                        <!-- PARENT TILE FOR WORKOUTS -->
+                        <div class="tile is-parent is-vertical">
 
                             <!-- TILE TITLE -->
                             <div class="tile is-child">
@@ -715,12 +708,11 @@
 
                             <!-- END ITERATE OVER WORKOUTS HERE -->
                             {% endfor %}
-
-                        {% endif %}
                     
                     
-                    <!-- END PARENT TILE FOR WORKOUTS -->
-                    </div>
+                        <!-- END PARENT TILE FOR WORKOUTS -->
+                        </div>
+                    {% endif %}
 
                 </div>
             <!-- END ANCESTOR DIV -->
