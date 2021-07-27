@@ -143,7 +143,7 @@
                         {% if profile == user %}
                         <div class="card-footer">
                             
-                            <a href="/swolemates/workout/{{workout.id}}/edit" class="card-footer-item">Edit Workout</a>
+                            <a href="/swolemates/workout/{{workout.id}}/edit" class="card-footer-item"><span class="button">Edit Workout</span></a>
                             <form action="/swolemates/workout/{{workout.id}}/delete" method="POST" class="card-footer-item">
                                 {% csrf_token %}
                                 <input type="submit" value="Delete Workout" onclick="return confirm('Are you sure you want to delete your workout?');" class="button is-danger">
