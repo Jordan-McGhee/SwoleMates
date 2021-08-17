@@ -324,7 +324,7 @@
                                                     </div>
                                                     <div class="media-right is-align-content-center">
                                                         <!-- DELETE COMMENT -->
-                                                        {% if comment.posted_by == user %}
+                                                        {% if comment.posted_by == user or post.posted_by == user %}
                                                             <form action="swolemates/home/post/{{post.id}}/comment/{{comment.id}}/delete" method="POST" class="is-align-items-center">
                                                                 {% csrf_token %}
                                                                 <input type="submit" value="Delete Comment" class="button">
